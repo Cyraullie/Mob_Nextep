@@ -9,6 +9,7 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
+import { TouchableHighlight } from "react-native-gesture-handler";
 //import { showMessage } from "react-native-flash-message";
 //import { Picker } from "@react-native-picker/picker";
 
@@ -51,10 +52,6 @@ class LoginScreen extends Component {
         return (
             <View style={styles.container}>
                 <ImageBackground source={image} style={styles.backgroud}>
-                        <Image 
-                            style={styles.tinyLogo}
-                            source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/772.png"}}
-                        />
                     <SafeAreaView>
                         <Text style={styles.text}>Pseudo</Text>
                         <TextInput
@@ -67,13 +64,13 @@ class LoginScreen extends Component {
                             secureTextEntry
                             onChangeText={this.onPasswordChange}
                         ></TextInput>
-                         <View style={[{ width: "50%", marginLeft: "25%" }]}>
-                            <Button
-                                size={15}
-                                color="blue"
-                                onPress={this.onPressLogin.bind(this)}
-                                title="Se connecter"
-                            />
+                         <View>
+                            <TouchableHighlight
+                            style={styles.submit}
+                            onPress={this.onPressLogin.bind(this)}
+                            >
+                              <Text style={styles.submitText}>Se connecter</Text>
+                              </TouchableHighlight>
                         </View>
                     </SafeAreaView>
                 </ImageBackground>
@@ -87,12 +84,6 @@ const image = {
 };
 
 const styles = StyleSheet.create({
-    tinyLogo: {
-        alignSelf: "center",
-        resizeMode: 'stretch',
-        width: 320,
-        height: 62,
-    },
   container: {
     flex: 1,
     flexDirection: "column",
@@ -110,22 +101,35 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    marginBottom: 5,
     fontWeight: "bold",
     color: "white"
   },
   input: {
     backgroundColor: "#FFFFFF",
-
+    borderRadius: 20,
+    paddingLeft: 20,
     marginLeft: 50,
     marginRight: 50,
     marginBottom: 20,
     height: 50,
   },
-  picker: {
+  submit: {
+    width: 275,
     marginLeft: 50,
-    marginRight: 50,
-    marginBottom: 20,
-    height: 50,
+    marginTop: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: 'blue',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+  submitText: {
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "bold",
   },
 });
 
