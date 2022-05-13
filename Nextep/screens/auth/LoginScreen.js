@@ -58,14 +58,16 @@ export default class LoginScreen extends Component {
                       source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
                        />
 
-                        <Text style={styles.text}>Pseudo</Text>
+                        <Text style={styles.text}>Email</Text>
                         <TextInput
                             style={styles.input}
+                            placeholder="Email"
                             onChangeText={this.onUsernameChange}
                         ></TextInput>
                         <Text style={styles.text}>Mot de passe</Text>
                         <TextInput
                             style={styles.input}
+                            placeholder="Mot de passe"
                             secureTextEntry
                             onChangeText={this.onPasswordChange}
                         ></TextInput>
