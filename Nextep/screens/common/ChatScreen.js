@@ -10,7 +10,8 @@ import {
   SafeAreaView,
 } from "react-native";
 
-class HomeScreen extends Component {
+
+export default class ChatScreen extends Component {
     constructor(props) {
         super(props),
         (this.state = { username: "", password: ""});
@@ -21,7 +22,8 @@ class HomeScreen extends Component {
             <View style={styles.container}>
 
               <SafeAreaView>
-                  <Text>Home</Text>
+                  
+                <Text>Chat</Text>
                   
               </SafeAreaView>
             </View>
@@ -72,4 +74,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
