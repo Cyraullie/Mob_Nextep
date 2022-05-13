@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import { Header } from "../components/Header"
 
 import Home from "../screens/common/HomeScreen"
 import Login from "../screens/auth/LoginScreen"
@@ -18,12 +19,23 @@ class MyDrawer extends Component {
     this.state = { userToken: localStorage.getItem("user_token")};
   }
 
-
   render() {
     return (
       this.state.userToken != null ? (
         <NavigationContainer>   
-            <Drawer.Navigator initialRouteName="Accueil" useLegacyImplementation>
+            <Drawer.Navigator 
+            initialRouteName="Accueil" 
+            useLegacyImplementation 
+            screenOptions={{
+              headerTitle: (props) => <Header {...props}/>,
+              headerStyle: {
+                backgroundColor: "#6610f2"
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}>
                 <Drawer.Screen name="Accueil" component={Home} />
                 <Drawer.Screen name="Mon profil" component={Home} />
                 <Drawer.Screen name="Chat" component={Home} />
