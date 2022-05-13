@@ -1,8 +1,8 @@
 import axios from "axios";
-import { env } from "@env"
+import { BASE_URL } from "@env"
 
 let connectAPI = axios.create({
-    baseURL: {env}.BASE_URL,
+    baseURL: {BASE_URL}.BASE_URL,
     timeout: 10000,
 });
 
