@@ -51,14 +51,17 @@ class MyDrawer extends Component {
                 fontWeight: 'bold',
               },
             }}>
-                <Drawer.Screen name="Accueil" component={Home} />
-                <Drawer.Screen name="Actualité" component={News} />
-                <Drawer.Screen name="Mon profil" component={Profile} />
-                <Drawer.Screen name="Chat" component={Chat} />
-                <Drawer.Screen name="Cagnotte" component={Pot} />
-                <Drawer.Screen name="Partenaire" component={Partner} />
-                <Drawer.Screen name="Paramètre" component={Parameter} />
-                <Drawer.Screen name="Vote" component={Vote} />
+              
+              <Drawer.Screen name="Accueil" component={Home} />
+              <Drawer.Screen name="Actualité" component={News} />
+              <Drawer.Screen name="Cagnotte" component={Pot} />
+              <Drawer.Screen name="Partenaire" component={Partner} />
+              
+              <Drawer.Screen name="Mon profil" component={Profile} />
+              <Drawer.Screen name="Paramètre" component={Parameter} />
+
+              <Drawer.Screen name="Chat" component={Chat} />
+              <Drawer.Screen name="Vote" component={Vote} />
             </Drawer.Navigator>
         </NavigationContainer>
       ) : (
