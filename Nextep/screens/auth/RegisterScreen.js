@@ -9,7 +9,6 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
-
 import { TouchableHighlight } from "react-native-gesture-handler";
 //import { showMessage } from "react-native-flash-message";
 //import { Picker } from "@react-native-picker/picker";
@@ -17,7 +16,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 //import PickerView from "../../components/Picker";
 import APIKit from "../../components/Api";
 
-export default class LoginScreen extends Component {
+export default class RegisterScreen extends Component {
     constructor(props) {
         super(props),
         (this.state = { username: "", password: ""});
@@ -34,6 +33,7 @@ export default class LoginScreen extends Component {
     onPressLogin() {
         const { username, password } = this.state;
         const payload = { username, password };
+        console.log(this.props)
         const onSuccess = ({ data }) => {
             this.setState({ userToken: data });
             localStorage.setItem("user_token", this.state.userToken);
@@ -49,11 +49,10 @@ export default class LoginScreen extends Component {
     };
  
     render() {
-      console.log(this.props)
         return (
             <View style={styles.container}>
                 <ImageBackground source={image} style={styles.backgroud}>
-
+                    <SafeAreaView>
                       <Image 
                       style={styles.logo}
                       source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
@@ -72,19 +71,15 @@ export default class LoginScreen extends Component {
                             secureTextEntry
                             onChangeText={this.onPasswordChange}
                         ></TextInput>
-                          <TouchableHighlight
-                            onPress={() => this.props.navigation.navigate("Register")}
-                            >
-                              <Text style={styles.submitText}>s'inscrire</Text>
-                            </TouchableHighlight>
                          <View>
                             <TouchableHighlight
                             style={styles.submit}
                             onPress={this.onPressLogin.bind(this)}
                             >
                               <Text style={styles.submitText}>Se connecter</Text>
-                            </TouchableHighlight>
+                              </TouchableHighlight>
                         </View>
+                    </SafeAreaView>
                 </ImageBackground>
             </View>
         );

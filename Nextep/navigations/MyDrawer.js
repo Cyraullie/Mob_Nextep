@@ -6,6 +6,7 @@ import { Header } from "../components/Header"
 
 //authentifical route
 import Login from "../screens/auth/LoginScreen"
+import Register from "../screens/auth/RegisterScreen"
 
 //connected route
 import Home from "../screens/common/HomeScreen"
@@ -71,6 +72,7 @@ class MyDrawer extends Component {
             useLegacyImplementation
             >
                 <Drawer.Screen name="Login" component={() => <Login {...this.props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
+                <Drawer.Screen name="Register" component={() => <Register {...this.props}/>} options={{ headerShown: false }}/>
             </Drawer.Navigator>
         </NavigationContainer>
 
