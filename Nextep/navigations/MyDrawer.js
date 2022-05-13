@@ -69,17 +69,8 @@ class MyDrawer extends Component {
             <Drawer.Navigator 
             initialRouteName="Login" 
             useLegacyImplementation
-            screenOptions={{
-              headerTitle: (props) => <Header {...props}/>,
-              headerStyle: {
-                backgroundColor: "#6610f2"
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}>
-                <Drawer.Screen name="Login" component={() => <Login {...this.props} auth={this.handleTokenUpdate}/>}/>
+            >
+                <Drawer.Screen name="Login" component={() => <Login {...this.props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
             </Drawer.Navigator>
         </NavigationContainer>
 

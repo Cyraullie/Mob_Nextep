@@ -16,7 +16,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 //import PickerView from "../../components/Picker";
 import APIKit from "../../components/Api";
 
-class LoginScreen extends Component {
+export default class LoginScreen extends Component {
     constructor(props) {
         super(props),
         (this.state = { username: "", password: ""});
@@ -53,6 +53,11 @@ class LoginScreen extends Component {
             <View style={styles.container}>
                 <ImageBackground source={image} style={styles.backgroud}>
                     <SafeAreaView>
+                      <Image 
+                      style={styles.logo}
+                      source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
+                       />
+
                         <Text style={styles.text}>Pseudo</Text>
                         <TextInput
                             style={styles.input}
@@ -131,6 +136,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
+  logo: {
+    alignSelf: "center",
+    height: 200,
+    width: 200,
+  }
 });
-
-export default LoginScreen;
