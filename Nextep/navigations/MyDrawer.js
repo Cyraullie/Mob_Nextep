@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { Header } from "../components/Header"
@@ -71,8 +70,8 @@ class MyDrawer extends Component {
             initialRouteName="Login" 
             useLegacyImplementation
             >
-                <Drawer.Screen name="Login" component={() => <Login {...this.props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
-                <Drawer.Screen name="Register" component={() => <Register {...this.props}/>} options={{ headerShown: false }}/>
+                <Drawer.Screen name="Login" component={(props) => <Login {...props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
+                <Drawer.Screen name="Register" component={(props) => <Register {...props}/>} options={{ headerShown: false }}/>
             </Drawer.Navigator>
         </NavigationContainer>
 

@@ -20,16 +20,21 @@ import APIKit from "../../components/Api";
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", password: ""});
+        (this.state = { username: "", password: "", register: false});
     }
 
     onUsernameChange = (username) => {
-        this.setState({ username: username });
-      };
+      this.setState({ username: username });
+    };
     
-      onPasswordChange = (password) => {
-        this.setState({ password: password });
-      };
+    onPasswordChange = (password) => {
+      this.setState({ password: password });
+    };
+
+    onPressRegister = () => {
+      this.setState({ register: true });
+      this.props.navigation.navigate("Register")
+    }
 
     onPressLogin() {
         const { username, password } = this.state;
@@ -49,7 +54,6 @@ export default class LoginScreen extends Component {
     };
  
     render() {
-      console.log(this.props)
         return (
             <View style={styles.container}>
                 <ImageBackground source={image} style={styles.backgroud}>
@@ -73,7 +77,7 @@ export default class LoginScreen extends Component {
                             onChangeText={this.onPasswordChange}
                         ></TextInput>
                           <TouchableHighlight
-                            onPress={() => this.props.navigation.navigate("Register")}
+                            onPress={this.onPressRegister.bind(this)}
                             >
                               <Text style={styles.submitText}>s'inscrire</Text>
                             </TouchableHighlight>
