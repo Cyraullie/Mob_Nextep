@@ -6,15 +6,26 @@ import APIKit from "./Api";
 export default class DataProfileView extends Component {
   constructor(props) {
     super(props);
+    this.state = { profile: "", profileData: [] }
   }
 
   getProfileData() {
+      //{ id: 26, username: "cyril", firstname: "Cyril", lastname: "Goldenschue", email: "Cyril.Goldenschue@cpnv.ch", picture: "g3.png", created_at: "2022-05-20T06:35:49.000000Z", updated_at: "2022-05-20T06:35:49.000000Z" }
     APIKit.getProfile().
       then((res) => {
         let data = res.data
-        console.log(data)
-      })
-  }
+            const profileShift = (
+                <View>
+                    <Image style={styles.logo} source={require("../assets/"+data.picture)} />
+                    <Text>{data.firstname} {data.lastname}</Text>
+                </View>
+            );
+            this.setState({
+                profileData: profileShift,
+            })
+        })
+      }
+  
 
   
   componentDidMount() {
@@ -24,51 +35,17 @@ export default class DataProfileView extends Component {
   render() {
     return (
       <>
+      {this.state.profileData}
       </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  textTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  text: {
-    fontSize: 15,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  textAction: {
-    textAlign: "left",
-  },
-  date: {
-    fontSize: 12,
-  },
-  cardLogo: {
-    width: 40,
-    height: 40,
-  },
-  dayFont: {
-    backgroundColor: "#f4edc5"
-  },
-  nightFont: {
-    backgroundColor: "#69a0d045"
-  },
-
-
-  cardTitleArea: {
-    flexDirection: "row",
-
-  },
-  cardTitle: {
-    width: "90%"
-  },
-  cardContainer: {
-    flexDirection: "row",
-    marginLeft: 5,
-    marginBottom: 15,
-    width: "100%",
-  },
+     logo: {
+        alignSelf: "center",
+        height: 200,
+        width: 200,
+      }
 });
 
