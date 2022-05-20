@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
+import { IMG_URL } from "@env"
 
 import APIKit from "./Api";
 
@@ -16,7 +17,7 @@ export default class DataProfileView extends Component {
         let data = res.data
             const profileShift = (
                 <View>
-                    <Image style={styles.logo} source={require("../assets/"+data.picture)} />
+                    <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
                     <Text>{data.firstname} {data.lastname}</Text>
                 </View>
             );
