@@ -6,6 +6,8 @@ let connectAPI = axios.create({
     timeout: 10000,
     headers: {
       "Access-Control-Allow-Origin": "*", 
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     } 
 });
 
@@ -19,6 +21,7 @@ let config = {
 class API {
 
     getToken(payload) {
+      console.log(connectAPI.post("mytoken", payload))
       return connectAPI.post("mytoken", payload)
     }
 
