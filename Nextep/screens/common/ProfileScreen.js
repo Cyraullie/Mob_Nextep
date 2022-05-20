@@ -23,12 +23,8 @@ export default class ProfileScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-
-          <SafeAreaView>
-              
-            <Text>Profile</Text>
-            <DataProfileView />
-          </SafeAreaView>
+          <Text>Profile</Text>
+          <DataProfileView />
         </View>
       );
     }
