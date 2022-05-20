@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { Header } from "../components/Header"
 
@@ -50,6 +50,18 @@ class MyDrawer extends Component {
               headerTitleStyle: {
                 fontWeight: 'bold',
               },
+            }} drawerContent={props => {
+              return (
+                <DrawerContentScrollView {...props}>
+                  <DrawerItemList {...props} />
+                  <DrawerItem label="Logout" onPress={() => {
+                    localStorage.removeItem("user_token")
+                    this.handleTokenUpdate(null)
+                  }
+                  }
+                    />
+                </DrawerContentScrollView>
+              )
             }}>
               
               <Drawer.Screen name="Accueil" component={Home} />
