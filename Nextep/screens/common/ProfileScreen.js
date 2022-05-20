@@ -10,24 +10,27 @@ import {
   SafeAreaView,
 } from "react-native";
 
+import DataProfileView from "../../components/ProfileData";
+
 
 export default class ProfileScreen extends Component {
     constructor(props) {
         super(props),
         (this.state = { username: "", password: ""});
     }
- 
-    render() {
-        return (
-            <View style={styles.container}>
 
-              <SafeAreaView>
-                  
-                <Text>Profile</Text>
-                  
-              </SafeAreaView>
-            </View>
-        );
+
+    render() {
+      return (
+        <View style={styles.container}>
+
+          <SafeAreaView>
+              
+            <Text>Profile</Text>
+            <DataProfileView />
+          </SafeAreaView>
+        </View>
+      );
     }
 }
 
