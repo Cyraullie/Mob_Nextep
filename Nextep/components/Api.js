@@ -4,13 +4,19 @@ import { BASE_URL } from "@env"
 let connectAPI = axios.create({
     baseURL: {BASE_URL}.BASE_URL,
     timeout: 10000,
+    credentials: "same-origin"
 });
+
+let config = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("user_token"),
+    },
+  };
 
 class API {
 
     getToken(payload) {
-        console.log(connectAPI.post("token", payload))
-        return connectAPI.post("token", payload)
+        return connectAPI.post("mytoken", payload)
       }
 }
 
