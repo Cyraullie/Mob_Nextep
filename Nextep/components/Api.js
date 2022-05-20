@@ -4,7 +4,7 @@ import { BASE_URL } from "@env"
 let connectAPI = axios.create({
     baseURL: {BASE_URL}.BASE_URL,
     timeout: 10000,
-    credentials: "same-origin"
+    headers: {"Access-Control-Allow-Origin": "*"} 
 });
 
 let config = {
