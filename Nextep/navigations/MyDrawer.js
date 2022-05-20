@@ -57,6 +57,7 @@ class MyDrawer extends Component {
                   <DrawerItem label="Logout" onPress={() => {
                     localStorage.removeItem("user_token")
                     this.handleTokenUpdate(null)
+                    props.navigation.closeDrawer()
                   }
                   }
                     />
