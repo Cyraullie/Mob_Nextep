@@ -4,11 +4,14 @@ import { BASE_URL } from "@env"
 let connectAPI = axios.create({
     baseURL: {BASE_URL}.BASE_URL,
     timeout: 10000,
-    headers: {"Access-Control-Allow-Origin": "*"} 
+    headers: {
+      "Access-Control-Allow-Origin": "*", 
+    } 
 });
 
 let config = {
     headers: {
+      "Access-Control-Allow-Origin": "*", 
       Authorization: "Bearer " + localStorage.getItem("user_token"),
     },
   };
@@ -16,8 +19,12 @@ let config = {
 class API {
 
     getToken(payload) {
-        return connectAPI.post("mytoken", payload)
-      }
+      return connectAPI.post("mytoken", payload)
+    }
+
+    getProfile(){
+      return connectAPI.get("profile", config)
+    }
 }
 
 
