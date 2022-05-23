@@ -32,9 +32,6 @@ class API {
 
 
 
-
-
-
-
 const APIKit = new API();
-export default APIKit;
+
+export default  APIKit;
