@@ -17,7 +17,10 @@ export default class DataProfileView extends Component {
         //{ id: 26, username: "cyril", firstname: "Cyril", lastname: "Goldenschue", email: "Cyril.Goldenschue@cpnv.ch", picture: "g3.png", created_at: "2022-05-20T06:35:49.000000Z", updated_at: "2022-05-20T06:35:49.000000Z" }
         APIKit.getProfile()
         .then((res) => {
-          MetamaskKit.browserDetection()
+          MetamaskKit.getAccounts()
+          .then((meta) => {
+            console.log(meta)
+            let tokens = meta
             let data = res.data
             Moment.locale("fr");
             const profileShift = (
@@ -30,12 +33,18 @@ export default class DataProfileView extends Component {
                     <Text>{data.firstname} {data.lastname}</Text>
                     <Text>{data.email}</Text>
                     <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
+                    <Text>Tokens :</Text>
+                    
+                    <Text>{tokens[0]}</Text>
+                    {tokens.map(a => {
+                    })}
                 </View>
               </Card>
             );
             this.setState({
                 profileData: profileShift,
             })
+          })
         })
     }
     
