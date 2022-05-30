@@ -19,19 +19,58 @@ import APIKit from "../../components/Api";
 export default class RegisterScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", password: ""});
+        (this.state = { username: "", surname: "", lastname: "", firstname: "", password: "", cpassword: "", mdpConfirmed: false});
     }
 
     onUsernameChange = (username) => {
-        this.setState({ username: username });
-      };
-    
-      onPasswordChange = (password) => {
-        this.setState({ password: password });
-      };
+      console.log(username);
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      if (reg.test(username) === false) {
+        console.log("Email is Not Correct");
+        this.setState({ username: username })
+        return false;
+      }
+      else {
+        this.setState({ username: username })
+        console.log("Email is Correct");
+      }
+    };
 
-    onPressLogin() {
-        const { username, password } = this.state;
+    onSurnameChange = (surname) => {
+        this.setState({ surname: surname });
+    };
+    
+    onLastnameChange = (lastname) => {
+      this.setState({ lastname: lastname });
+    };
+      
+    onFirstnameChange = (firstname) => {
+      this.setState({ firstname: firstname });
+    };
+    
+    onPasswordChange = (password) => {
+      this.setState({ password: password });
+    };
+
+    onConfirmPasswordChange = (cpassword) => {
+      this.setState({ cpassword: cpassword})
+      
+      if(this.state.password == cpassword){
+        this.setState({ mdpConfirmed: true });
+      }else{
+        this.setState({ mdpConfirmed: false });
+      }
+    };
+
+    onPressLogin(){
+      this.setState({ register: false });
+      this.props.navigation.navigate("Login")
+    }
+
+    onPressRegister() {
+
+        console.log(this.state)
+        /*const { username, password } = this.state;
         const payload = { username, password };
         console.log(this.props)
         const onSuccess = ({ data }) => {
@@ -44,7 +83,7 @@ export default class RegisterScreen extends Component {
             console.log(error && error.response);
         };
 
-        APIKit.getToken(payload).then(onSuccess).catch(onFailure);
+        APIKit.getToken(payload).then(onSuccess).catch(onFailure);*/
 
     };
  
@@ -62,8 +101,31 @@ export default class RegisterScreen extends Component {
                         <TextInput
                             style={styles.input}
                             placeholder="Email"
+                            
                             onChangeText={this.onUsernameChange}
                         ></TextInput>
+
+                        <Text style={styles.text}>Username</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Username"
+                            onChangeText={this.onSurnameChange}
+                        ></TextInput>
+                        
+                        <Text style={styles.text}>Nom</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nom"
+                            onChangeText={this.onLastnameChange}
+                        ></TextInput>
+                        
+                        <Text style={styles.text}>Prénom</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Prénom"
+                            onChangeText={this.onFirstnameChange}
+                        ></TextInput>
+
                         <Text style={styles.text}>Mot de passe</Text>
                         <TextInput
                             style={styles.input}
@@ -71,13 +133,28 @@ export default class RegisterScreen extends Component {
                             secureTextEntry
                             onChangeText={this.onPasswordChange}
                         ></TextInput>
+
+
+                        <Text style={styles.text}>Confirmer le mot de passe</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Mot de passe"
+                            secureTextEntry
+                            onChangeText={this.onConfirmPasswordChange}
+                        ></TextInput>
+
                          <View>
                             <TouchableHighlight
                             style={styles.submit}
-                            onPress={this.onPressLogin.bind(this)}
+                            onPress={this.onPressRegister.bind(this)}
                             >
-                              <Text style={styles.submitText}>Se connecter</Text>
+                              <Text style={styles.submitText}>s'inscrire</Text>
                               </TouchableHighlight>
+                              <TouchableHighlight
+                              onPress={this.onPressLogin.bind(this)}
+                              >
+                              <Text style={styles.submitText}>Retour à la connection</Text>
+                            </TouchableHighlight>
                         </View>
                     </SafeAreaView>
                 </ImageBackground>
@@ -140,7 +217,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignSelf: "center",
-    height: 200,
-    width: 200,
+    height: 100,
+    width: 100,
   }
 });
