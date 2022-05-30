@@ -20,7 +20,7 @@ import APIKit from "../../components/Api";
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", password: "", register: false});
+        (this.state = { username: "", password: ""});
     }
 
     onUsernameChange = (username) => {
@@ -32,7 +32,6 @@ export default class LoginScreen extends Component {
     };
 
     onPressRegister = () => {
-      this.setState({ register: true });
       this.props.navigation.navigate("Register")
     }
 
