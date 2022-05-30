@@ -11,10 +11,8 @@ import {
 } from "react-native";
 
 import { TouchableHighlight } from "react-native-gesture-handler";
-//import { showMessage } from "react-native-flash-message";
-//import { Picker } from "@react-native-picker/picker";
+import { showMessage } from "react-native-flash-message";
 
-//import PickerView from "../../components/Picker";
 import APIKit from "../../components/Api";
 
 export default class LoginScreen extends Component {
@@ -46,6 +44,11 @@ export default class LoginScreen extends Component {
       
         const onFailure = (error) => {
             console.log(error && error.response);
+            showMessage({
+              message: "L'email ou le mot de passe est incorrect.",
+              type: "danger",
+              duration: 6000
+            });
         };
 
         APIKit.getToken(payload).then(onSuccess).catch(onFailure);
