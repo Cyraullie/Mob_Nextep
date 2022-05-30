@@ -19,18 +19,23 @@ import APIKit from "../../components/Api";
 export default class RegisterScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", password: ""});
+        (this.state = { username: "", password: "", register: true});
     }
 
     onUsernameChange = (username) => {
         this.setState({ username: username });
-      };
+    };
     
-      onPasswordChange = (password) => {
-        this.setState({ password: password });
-      };
+    onPasswordChange = (password) => {
+      this.setState({ password: password });
+    };
 
-    onPressLogin() {
+    onPressLogin(){
+      this.setState({ register: false });
+      this.props.navigation.navigate("Login")
+    }
+
+    onPressRegister() {
         const { username, password } = this.state;
         const payload = { username, password };
         console.log(this.props)
@@ -74,10 +79,15 @@ export default class RegisterScreen extends Component {
                          <View>
                             <TouchableHighlight
                             style={styles.submit}
-                            onPress={this.onPressLogin.bind(this)}
+                            onPress={this.onPressRegister.bind(this)}
                             >
-                              <Text style={styles.submitText}>Se connecter</Text>
+                              <Text style={styles.submitText}>s'inscrire</Text>
                               </TouchableHighlight>
+                              <TouchableHighlight
+                              onPress={this.onPressLogin.bind(this)}
+                              >
+                              <Text style={styles.submitText}>Retour à la connection</Text>
+                            </TouchableHighlight>
                         </View>
                     </SafeAreaView>
                 </ImageBackground>
