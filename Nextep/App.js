@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'react-native-gesture-handler';
 
-import MyDrawer from "./navigations/MyDrawer"
+import Drawer from "./navigations/Drawer"
 //import FlashMessage from "react-native-flash-message";
 
 export default class App extends Component { 
@@ -11,7 +11,7 @@ export default class App extends Component {
 
   render(){
     return (
-      <MyDrawer />
+      <Drawer />
     )
   }
 }
