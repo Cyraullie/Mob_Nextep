@@ -23,8 +23,8 @@ export default class ProfileScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-          <Text>Profile</Text>
-          <DataProfileView />
+          <Text>Profil</Text>
+          <DataProfileView nav={this.props.navigation} />
         </View>
       );
     }

@@ -6,6 +6,7 @@ import Moment from "moment";
 
 import APIKit from "./Api";
 import MetamaskKit from "./MetamaskApi";
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 export default class DataProfileView extends Component {
   constructor(props) {
@@ -13,38 +14,45 @@ export default class DataProfileView extends Component {
     this.state = { profile: "", profileData: [] }
   }
 
-    getProfileData() {
-        //{ id: 26, username: "cyril", firstname: "Cyril", lastname: "Goldenschue", email: "Cyril.Goldenschue@cpnv.ch", picture: "g3.png", created_at: "2022-05-20T06:35:49.000000Z", updated_at: "2022-05-20T06:35:49.000000Z" }
-        APIKit.getProfile()
-        .then((res) => {
-          MetamaskKit.getAccounts()
-          .then((meta) => {
-            console.log(meta)
-            let tokens = meta
-            let data = res.data
-            Moment.locale("fr");
-            const profileShift = (
-              <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
-                <View style={styles.cardTitle}>
-                  <Text style={styles.text}>{data.username} </Text>
-                </View>
-                <View>
-                    <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
-                    <Text>{data.firstname} {data.lastname}</Text>
-                    <Text>{data.email}</Text>
-                    <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
-                    <Text>Tokens :</Text>
-                    
-                    <Text>{tokens}</Text>
-                </View>
-              </Card>
-            );
-            this.setState({
-                profileData: profileShift,
-            })
+  onPressEdit = () => {
+    this.props.nav.navigate("EditProfile")
+  }
+
+  getProfileData() {
+      APIKit.getProfile()
+      .then((res) => {
+        MetamaskKit.getAccounts()
+        .then((meta) => {
+          let tokens = meta
+          let data = res.data
+          Moment.locale("fr");
+          const profileShift = (
+            <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
+              <View style={styles.cardTitle}>
+                <Text style={styles.textTitle}>{data.username} </Text>
+                <TouchableHighlight  
+                onPress={this.onPressEdit.bind(this)}>
+                  <Image style={styles.iconButton} source={require("../assets/edit-icon.png")}></Image>
+                </TouchableHighlight>
+              </View>
+              <View>
+                  <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
+                  <Text>{data.firstname} {data.lastname}</Text>
+                  <Text>{data.email}</Text>
+                  <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
+                  <Text>Tokens :</Text>
+                  
+                  <Text>{tokens}</Text>
+              </View>
+            </Card>
+          );
+          this.setState({
+              profileData: profileShift,
           })
         })
-    }
+      }
+    )
+  }
     
 
   
@@ -67,6 +75,11 @@ const styles = StyleSheet.create({
     height: 200,
     width: 200,
   },
+  iconButton: {
+    height: 40,
+    width: 40,
+    alignSelf: "flex-end",
+  },
   cardContainer: {
     flexDirection: "row",
     marginLeft: 5,
@@ -78,13 +91,16 @@ const styles = StyleSheet.create({
     height: Dimensions.get("screen").height - (Dimensions.get("screen").height * .15)
   },
   cardTitle: {
-    width: "90%",
+    flexDirection: "row",
+    width: "99%",
     marginBottom: 10,
-    alignSelf: "center"
   },
-  text: {
+  textTitle: {
     fontSize: 25,
     fontWeight: "bold",
+    textAlign: "right",
+    marginRight: "auto",
+    width: "60%"
   },
 });
 
