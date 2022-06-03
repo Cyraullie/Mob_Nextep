@@ -81,10 +81,11 @@ class MyDrawer extends Component {
             <Drawer.Screen name="Vote" component={Vote} />
 
             
-            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props} options={{
-                  drawerItemStyle: { display: 'none' }
+            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}
               
-            }}/>}/>
+            />}  options={{
+                  drawerItemStyle: { display: 'none' }
+            }}/>
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (
