@@ -22,6 +22,32 @@ export default class DataProfileView extends Component {
     console.log("updated!!!")
   }
 
+  onUsernameChange = (username) => {
+    console.log(username);
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(username) === false) {
+      console.log("Email is Not Correct");
+      this.setState({ username: username })
+      return false;
+    }
+    else {
+      this.setState({ username: username })
+      console.log("Email is Correct");
+    }
+  };
+
+  onSurnameChange = (surname) => {
+      this.setState({ surname: surname });
+  };
+  
+  onLastnameChange = (lastname) => {
+    this.setState({ lastname: lastname });
+  };
+    
+  onFirstnameChange = (firstname) => {
+    this.setState({ firstname: firstname });
+  };
+  
   getProfileData() {
     APIKit.getProfile()
     .then((res) => {
@@ -64,6 +90,8 @@ export default class DataProfileView extends Component {
     APIKit.getProfile()
     .then((res) => {
       let data = res.data
+      //TODO enlever le console.log
+      console.log(data)
       Moment.locale("fr");
       const profileShift = (
         <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
@@ -74,15 +102,15 @@ export default class DataProfileView extends Component {
             
               <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} /> 
               <Text>Prénom</Text>
-              <TextInput value={data.firstname} style={styles.input}/>
+              <TextInput defaultValue={data.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
               <Text>Nom</Text>
-              <TextInput value={data.lastname} style={styles.input}/>
+              <TextInput defaultValue={data.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
               
               
               <Text>Pseudo</Text>
-              <TextInput value={data.username} style={styles.input}/>
+              <TextInput defaultValue={data.username} style={styles.input} onChangeText={this.onSurnameChange}/>
               <Text>Email</Text>
-              <TextInput value={data.email} style={styles.input}/>
+              <TextInput defaultValue={data.email} style={styles.input} onChangeText={this.onUsernameChange}/>
 
               <TouchableHighlight
                   style={styles.submit}
