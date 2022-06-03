@@ -16,8 +16,10 @@ import Parameter from "../screens/common/ParameterScreen"
 import Partner from "../screens/common/PartnerScreen"
 import Pot from "../screens/common/PotScreen"
 import Profile from "../screens/common/ProfileScreen"
+import EditProfile from "../screens/common/EditProfileScreen"
 import Vote from "../screens/common/VoteScreen"
 
+const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
 const Drawer = createDrawerNavigator();
 
 class MyDrawer extends Component {
@@ -77,6 +79,12 @@ class MyDrawer extends Component {
 
             <Drawer.Screen name="Chat" component={Chat} />
             <Drawer.Screen name="Vote" component={Vote} />
+
+            
+            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props} options={{
+                  drawerItemStyle: { display: 'none' }
+              
+            }}/>}/>
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (
