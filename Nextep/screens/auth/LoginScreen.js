@@ -14,6 +14,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 import { showMessage } from "react-native-flash-message";
 
 import APIKit from "../../components/Api";
+import StorageKit from "../../components/Storage";
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -38,7 +39,7 @@ export default class LoginScreen extends Component {
         const payload = { username, password };
         const onSuccess = ({ data }) => {
             this.setState({ userToken: data });
-            localStorage.setItem("user_token", this.state.userToken);
+            StorageKit.set("user_token", this.state.userToken);
             this.props.auth(data);
         };
       

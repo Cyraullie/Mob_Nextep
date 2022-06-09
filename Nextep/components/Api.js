@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BASE_URL } from "@env"
 
+import StorageKit from "./Storage";
+
 let connectAPI = axios.create({
     baseURL: {BASE_URL}.BASE_URL,
     timeout: 10000,
@@ -14,7 +16,7 @@ let connectAPI = axios.create({
 let config = {
     headers: {
       "Access-Control-Allow-Origin": "*", 
-      Authorization: "Bearer " + localStorage.getItem("user_token"),
+      Authorization: "Bearer " + StorageKit.get("user_token"),
     },
   };
 
