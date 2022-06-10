@@ -5,13 +5,13 @@ import { IMG_URL } from "@env"
 import Moment from "moment";
 
 import APIKit from "./Api";
-import MetamaskKit from "./MetamaskApi";
+
 import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
 
 export default class DataProfileView extends Component {
   constructor(props) {
     super(props);
-    this.state = { profile: "", profileData: [] }
+    this.state = { profile: "", profileData: [], _method: "PATCH", username: "", email: "", firstname: "", lastname: "", wallet_address: ""}
   }
 
   onPressEdit = () => {
@@ -19,25 +19,40 @@ export default class DataProfileView extends Component {
   }
 
   onPressUpdate = () => {
-    console.log("updated!!!")
+    let { _method, username, email, firstname, lastname, wallet_address } = this.state;
+    let payload = { _method, username, email, firstname, lastname, wallet_address };
+
+    const onSuccess = ({ data }) => {
+      console.log("updated!!!")
+      this.props.nav.reset({
+        index: 0,
+        routes: [{ name: 'Mon profil' }],
+      })
+    };
+
+    const onFailure = (error) => {
+        console.log(error && error.response);
+    };
+
+    APIKit.updateProfile(payload).then(onSuccess).catch(onFailure)
   }
 
-  onUsernameChange = (username) => {
+  onEmailChange = (email) => {
     console.log(username);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(username) === false) {
       console.log("Email is Not Correct");
-      this.setState({ username: username })
+      this.setState({ email: email })
       return false;
     }
     else {
-      this.setState({ username: username })
+      this.setState({ email: email })
       console.log("Email is Correct");
     }
   };
 
-  onSurnameChange = (surname) => {
-      this.setState({ surname: surname });
+  onUsernameChange = (username) => {
+      this.setState({ username: username });
   };
   
   onLastnameChange = (lastname) => {
@@ -47,13 +62,18 @@ export default class DataProfileView extends Component {
   onFirstnameChange = (firstname) => {
     this.setState({ firstname: firstname });
   };
+
+  onWalletAddressChange = (wallet_address) => {
+    this.setState({ wallet_address: wallet_address });
+  };
   
   getProfileData() {
     APIKit.getProfile()
     .then((res) => {
-      MetamaskKit.getAccounts()
-      .then((meta) => {
-        let tokens = meta
+
+      //APIKit.check("0x2B243FFba97437430DCDe478a8f6133F124571fA")
+      //.then((meta) => {
+        //let tokens = meta
         let data = res.data
         Moment.locale("fr");
         const profileShift = (
@@ -72,7 +92,7 @@ export default class DataProfileView extends Component {
                 <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
                 <Text>Tokens :</Text>
                 
-                <Text>{tokens}</Text>
+                <Text>{data.wallet_address}</Text>
 
 
             </View>
@@ -82,7 +102,7 @@ export default class DataProfileView extends Component {
             profileData: profileShift,
         })
       })
-    })
+    //})
   }
   
 
@@ -92,6 +112,7 @@ export default class DataProfileView extends Component {
       let data = res.data
       //TODO enlever le console.log
       console.log(data)
+      this.setState({ username: data.username,  email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: data.wallet_address })
       Moment.locale("fr");
       const profileShift = (
         <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
@@ -108,9 +129,11 @@ export default class DataProfileView extends Component {
               
               
               <Text>Pseudo</Text>
-              <TextInput defaultValue={data.username} style={styles.input} onChangeText={this.onSurnameChange}/>
+              <TextInput defaultValue={data.username} style={styles.input} onChangeText={this.onUsernameChange}/>
               <Text>Email</Text>
-              <TextInput defaultValue={data.email} style={styles.input} onChangeText={this.onUsernameChange}/>
+              <TextInput defaultValue={data.email} style={styles.input} onChangeText={this.onEmailChange}/>
+              <Text>Wallet_address</Text>
+              <TextInput defaultValue={data.wallet_address} style={styles.input} onChangeText={this.onWalletAddressChange}/>
 
               <TouchableHighlight
                   style={styles.submit}
