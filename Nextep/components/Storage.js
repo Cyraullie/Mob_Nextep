@@ -1,17 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+//TODO try use asyncstorage ?
 class Storage {
 
-    async set(name, data) {
-      await AsyncStorage.setItem(name, data)
+    set(name, data) {
+      localStorage.setItem(name, data)
     }
 
-    async get(name){
-      return await AsyncStorage.getItem(name)
+    get(name){
+      return localStorage.getItem(name)
     }
 
-    async remove(name){
-        await AsyncStorage.removeItem(name)
+    remove(name){
+        localStorage.removeItem(name)
     }
     
 }
