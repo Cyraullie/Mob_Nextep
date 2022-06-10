@@ -18,7 +18,17 @@ class Metamask {
 
   getAccounts(){
       if(this.browserDetection()){
-        let accounts = ethereum.request({ method: 'eth_requestAccounts' });
+        //ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x56"}]})
+        let accounts = ethereum.request({ method: 'eth_getBalance', params: ["0x2B243FFba97437430DCDe478a8f6133F124571fA", "latest"] });
+        /*let accounts = ethereum.request({ method: "wallet_watchAsset", params: {
+          type: 'ERC20',
+            options: {
+              address: '0xf10770649b0b8f62bb5e87ad0da7729888a7f5c3',
+              symbol: 'Nextep',
+              decimals: 18,
+              image: 'https://bscscan.com/images/main/empty-token.png',
+            },
+        }})*/
         return accounts
       }
   }
