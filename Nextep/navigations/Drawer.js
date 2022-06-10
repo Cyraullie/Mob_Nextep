@@ -21,6 +21,7 @@ import Vote from "../screens/common/VoteScreen"
 
 const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
 const Drawer = createDrawerNavigator();
+import StorageKit from "../components/Storage";
 
 class MyDrawer extends Component {
   state = {
@@ -29,7 +30,7 @@ class MyDrawer extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { userToken: localStorage.getItem("user_token")};
+    this.state = { userToken: StorageKit.get("user_token")};
     this.handleTokenUpdate = this.handleTokenUpdate.bind(this);
   }
 
@@ -59,7 +60,7 @@ class MyDrawer extends Component {
               <DrawerContentScrollView {...props}>
                 <DrawerItemList {...props} />
                 <DrawerItem label="Logout" onPress={() => {
-                  localStorage.removeItem("user_token")
+                  StorageKit.remove("user_token")
                   this.handleTokenUpdate(null)
                   props.navigation.closeDrawer()
                 }
@@ -81,10 +82,11 @@ class MyDrawer extends Component {
             <Drawer.Screen name="Vote" component={Vote} />
 
             
-            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props} options={{
-                  drawerItemStyle: { display: 'none' }
+            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}
               
-            }}/>}/>
+            />}  options={{
+                  drawerItemStyle: { display: 'none' }
+            }}/>
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (
