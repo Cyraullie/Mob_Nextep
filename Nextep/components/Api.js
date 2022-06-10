@@ -1,10 +1,11 @@
 import axios from "axios";
-import { BASE_URL } from "@env"
+import { BASE_URL, BSC_API_TOKEN } from "@env"
 
 import StorageKit from "./Storage";
+var api = require("bscscan-api").init(BSC_API_TOKEN);
 
 let connectAPI = axios.create({
-    baseURL: {BASE_URL}.BASE_URL,
+    baseURL: BASE_URL,
     timeout: 10000,
     headers: {
       "Access-Control-Allow-Origin": "*", 
@@ -23,13 +24,18 @@ let config = {
 class API {
 
     getToken(payload) {
-      console.log(connectAPI.post("mytoken", payload))
       return connectAPI.post("mytoken", payload)
     }
 
     getProfile(){
+      console.log(api.account.balance("0x2B243FFba97437430DCDe478a8f6133F124571fA"))
       return connectAPI.get("profile", config)
     }
+
+    updateProfile(payload){
+      return connectAPI.post("profile", payload, config)
+    }
+
 }
 
 
