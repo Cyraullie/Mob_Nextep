@@ -30,7 +30,9 @@ class MyDrawer extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { userToken: StorageKit.get("user_token")};
+    StorageKit.get("user_token").then((res) => {
+      this.state = {userToken: res} 
+    })
     this.handleTokenUpdate = this.handleTokenUpdate.bind(this);
   }
 

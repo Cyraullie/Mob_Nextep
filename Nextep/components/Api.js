@@ -13,13 +13,17 @@ let connectAPI = axios.create({
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     } 
 });
-
-let config = {
+var config = {}
+StorageKit.get("user_token").then((res) => { 
+  config = {
     headers: {
       "Access-Control-Allow-Origin": "*", 
-      Authorization: "Bearer " + StorageKit.get("user_token"),
-    },
-  };
+      Authorization: "Bearer " + res,
+    },   
+  }; 
+});
+
+
 
 class API {
 
@@ -28,6 +32,7 @@ class API {
     }
 
     getProfile(){
+      console.log(config)
       console.log(api.account.balance("0x2B243FFba97437430DCDe478a8f6133F124571fA"))
       return connectAPI.get("profile", config)
     }
