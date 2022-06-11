@@ -16,13 +16,17 @@ export default function PhotoScreen(props) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    StorageKit.set("qr_scan", data);
-    props.navigation.reset({
-        index: 0,
-        routes: [{ name: 'EditProfile'}], 
-      })
-  };
+    if(data.substring(0, 2) === "0x"){
+        StorageKit.set("qr_scan", data);
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'EditProfile'}], 
+        })
+      
+    }else{
+        alert("Ceci n'est pas une adresse de compte porte-monnaie")
+    }
+  }   
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
