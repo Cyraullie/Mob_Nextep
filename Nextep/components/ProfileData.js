@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, ScrollView  } from "react-native";
 import { Card } from "react-native-elements";
 import { IMG_URL } from "@env"
 import Moment from "moment";
@@ -77,26 +77,28 @@ export default class DataProfileView extends Component {
         let data = res.data
         Moment.locale("fr");
         const profileShift = (
-          <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
-            <View style={styles.cardTitle}>
-              <Text style={styles.textTitle}>{data.username} </Text>
-              <TouchableHighlight  
-              onPress={this.onPressEdit.bind(this)}>
-                <Image style={styles.iconButton} source={require("../assets/edit-icon.png")}></Image>
-              </TouchableHighlight>
-            </View>
-            <View>
-                <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
-                <Text>{data.firstname} {data.lastname}</Text>
-                <Text>{data.email}</Text>
-                <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
-                <Text>Tokens :</Text>
-                
-                <Text>{data.wallet_address}</Text>
+          <ScrollView >
+            <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
+              <View style={styles.cardTitle}>
+                <Text style={styles.textTitle}>{data.username} </Text>
+                <TouchableHighlight  
+                onPress={this.onPressEdit.bind(this)}>
+                  <Image style={styles.iconButton} source={require("../assets/edit-icon.png")}></Image>
+                </TouchableHighlight>
+              </View>
+              <View>
+                  <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
+                  <Text>{data.firstname} {data.lastname}</Text>
+                  <Text>{data.email}</Text>
+                  <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
+                  <Text>Tokens :</Text>
+                  
+                  <Text>{data.wallet_address}</Text>
+                                        
 
-
-            </View>
-          </Card>
+              </View>
+            </Card>
+          </ScrollView>
         );
         this.setState({
             profileData: profileShift,
@@ -115,7 +117,9 @@ export default class DataProfileView extends Component {
       this.setState({ username: data.username,  email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: data.wallet_address })
       Moment.locale("fr");
       const profileShift = (
+        
         <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
+          <ScrollView >
           <View style={styles.cardTitle}>
             <Text style={styles.textTitle}>{data.username} </Text>
           </View>
@@ -142,6 +146,7 @@ export default class DataProfileView extends Component {
                     <Text style={styles.submitText}>Mettre à jour</Text>
                 </TouchableHighlight>
           </View>
+          </ScrollView>
         </Card>
       );
       this.setState({
