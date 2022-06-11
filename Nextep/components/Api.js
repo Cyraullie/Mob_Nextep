@@ -32,7 +32,6 @@ class API {
     }
 
     getProfile(){
-      console.log(config)
       console.log(api.account.balance("0x2B243FFba97437430DCDe478a8f6133F124571fA"))
       return connectAPI.get("profile", config)
     }

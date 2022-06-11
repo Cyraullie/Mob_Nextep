@@ -18,6 +18,7 @@ import Pot from "../screens/common/PotScreen"
 import Profile from "../screens/common/ProfileScreen"
 import EditProfile from "../screens/common/EditProfileScreen"
 import Vote from "../screens/common/VoteScreen"
+import Photo from "../screens/common/PhotoScreen"
 
 const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
 const Drawer = createDrawerNavigator();
@@ -30,10 +31,12 @@ class MyDrawer extends Component {
 
   constructor(props) {
     super(props)
-    StorageKit.get("user_token").then((res) => {
-      this.state = {userToken: res} 
-    })
+    this.getStoredToken;
     this.handleTokenUpdate = this.handleTokenUpdate.bind(this);
+  }
+
+  async getStoredToken(){
+    this.state = {userToken: await StorageKit.get("user_token")} 
   }
 
   handleTokenUpdate(data) {
@@ -84,9 +87,10 @@ class MyDrawer extends Component {
             <Drawer.Screen name="Vote" component={Vote} />
 
             
-            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}
-              
-            />}  options={{
+            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}/>}  options={{
+                  drawerItemStyle: { display: 'none' }
+            }}/>
+            <Drawer.Screen name="Photo" component={(props) => <Photo {...props}/>}  options={{
                   drawerItemStyle: { display: 'none' }
             }}/>
           </Drawer.Navigator>
