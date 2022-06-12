@@ -4,6 +4,13 @@ import { BASE_URL, BSC_API_TOKEN } from "@env"
 import StorageKit from "./Storage";
 var api = require("bscscan-api").init(BSC_API_TOKEN);
 
+const bscUrl = "https://api.bscscan.com/";
+
+let connectBscApi = axios.create({
+  baseURL: bscUrl,
+  timeout: 2000,
+})
+
 let connectAPI = axios.create({
     baseURL: BASE_URL,
     timeout: 10000,
@@ -32,7 +39,6 @@ class API {
     }
 
     getProfile(){
-      console.log(api.account.balance("0x2B243FFba97437430DCDe478a8f6133F124571fA"))
       return connectAPI.get("profile", config)
     }
 
@@ -40,6 +46,16 @@ class API {
       return connectAPI.post("profile", payload, config)
     }
 
+
+
+
+    getTokenQuantity(contract_address, wallet_address){
+      return connectBscApi.get("api?module=account&action=tokenbalance&contractaddress="+contract_address+"&address="+wallet_address+"&apikey="+BSC_API_TOKEN)
+    }
+
+    getContractName(contractaddress){
+      return connectBscApi.get("api?module=contract&action=getsourcecode&address="+ contractaddress +"&apikey="+BSC_API_TOKEN)
+    }
 }
 
 
