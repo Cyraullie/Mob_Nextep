@@ -151,14 +151,14 @@ export default class DataProfileView extends Component {
               <Text>Email</Text>
               <TextInput defaultValue={this.state.email} style={styles.input} onChangeText={this.onEmailChange}/>
               <Text>Wallet_address</Text>
-              <TextInput defaultValue={this.state.wallet_address} style={styles.input} onChangeText={this.onWalletAddressChange}/>
-              
-              <TouchableHighlight 
-                  style={styles.submit} 
-                  onPress={() => this.props.nav.navigate("Photo")}>
-                <Image style={styles.littleButton} source={require("../assets/camera.png") } />
-              </TouchableHighlight>
-
+              <View style={styles.wallet}>
+                <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
+                
+                <TouchableHighlight 
+                    onPress={() => this.props.nav.navigate("Photo")}>
+                  <Image style={styles.littleButton} source={require("../assets/camera.png") } />
+                </TouchableHighlight>
+              </View>
               <TouchableHighlight
                   style={styles.submit}
                   onPress={this.onPressUpdate.bind(this)}
@@ -264,5 +264,22 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     width: "60%"
   },
+  wallet: {
+    width: "100%",
+    flexDirection: "row",
+  },
+  wallet_input: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    width: "70%",
+    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+    height: 30,
+  },
+  photo_icon: {
+    width: "10%"
+  }
 });
 
