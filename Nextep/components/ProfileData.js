@@ -108,12 +108,7 @@ export default class DataProfileView extends Component {
             })
           })
         })
-        /*APIKit.getCrypto("0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3", data.wallet_address).then((res) =>{
-          console.log(res.data)
-        })*/
-        
       })
-    //})
   }
   
 
@@ -139,7 +134,14 @@ export default class DataProfileView extends Component {
           </View>
           <View>
             
+            <View>
               <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} /> 
+              <TouchableHighlight 
+                    onPress={() => this.props.nav.navigate("Photo")}>
+                  <Image style={styles.littleButton} source={require("../assets/camera.png") } />
+                </TouchableHighlight>
+              </View>
+              
               <Text>Prénom</Text>
               <TextInput defaultValue={this.state.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
               <Text>Nom</Text>
@@ -155,7 +157,7 @@ export default class DataProfileView extends Component {
                 <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
                 
                 <TouchableHighlight 
-                    onPress={() => this.props.nav.navigate("Photo")}>
+                    onPress={() => this.props.nav.navigate("ScanQr")}>
                   <Image style={styles.littleButton} source={require("../assets/camera.png") } />
                 </TouchableHighlight>
               </View>

@@ -18,6 +18,7 @@ import Pot from "../screens/common/PotScreen"
 import Profile from "../screens/common/ProfileScreen"
 import EditProfile from "../screens/common/EditProfileScreen"
 import Vote from "../screens/common/VoteScreen"
+import ScanQr from "../screens/common/ScanQrScreen"
 import Photo from "../screens/common/PhotoScreen"
 
 const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
@@ -90,8 +91,13 @@ class MyDrawer extends Component {
             <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}/>}  options={{
                   drawerItemStyle: { display: 'none' }
             }}/>
+            <Drawer.Screen name="ScanQr" component={(props) => <ScanQr {...props}/>}  options={{
+                  drawerItemStyle: { display: 'none' },
+                  headerShown: false
+            }}/>
             <Drawer.Screen name="Photo" component={(props) => <Photo {...props}/>}  options={{
-                  drawerItemStyle: { display: 'none' }
+                  drawerItemStyle: { display: 'none' },
+                  headerShown: false
             }}/>
           </Drawer.Navigator>
         </NavigationContainer>
