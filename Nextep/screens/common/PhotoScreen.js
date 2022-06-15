@@ -3,23 +3,27 @@ import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native';
 import { Camera } from 'expo-camera';
 import StorageKit from "../../components/Storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as MediaLibrary from 'expo-media-library';
 
 export default function PhotoScreen(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false)
-  const [capturedImage, setCapturedImage] = useState(null)
+  const [capturedImage, setCapturedImage] = useState(null);
   let camera;
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
+      const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === 'granted');
+      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
   }, []);
 
   const Pic = async () => {
     if(!camera) return
     const photo = await camera.takePictureAsync()
+    console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
@@ -30,7 +34,9 @@ export default function PhotoScreen(props) {
   }
 
   const __savePhoto = () => {
-
+    MediaLibrary.saveToLibraryAsync(capturedImage.uri).then(() => {
+      setPhoto(undefined);
+    });
   }
 
   const CameraPreview = ({photo, savePhoto, retakePicture}) => {
