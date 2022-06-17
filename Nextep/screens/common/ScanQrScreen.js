@@ -24,16 +24,20 @@ export default function ScanQrScreen(props) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    if(data.substring(0, 2) === "0x"){
-        StorageKit.set("qr_scan", data);
-        props.navigation.reset({
-            index: 0,
-            routes: [{ name: 'EditProfile'}], 
-        })
-      
-    }else{
-        alert("Ceci n'est pas une adresse de compte porte-monnaie")
-    }
+    if (data.substring(0, 2) === "0x"){ 
+      StorageKit.set("qr_scan", data)
+      props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'EditProfile'}], 
+      })
+    }else if (data.replace("ethereum:", "").substring(0, 2) === "0x") {
+      StorageKit.set("qr_scan", data.replace("ethereum:", ""));
+      props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'EditProfile'}], 
+      })
+    }else alert("Ceci n'est pas une adresse de compte porte-monnaie")
+    
   }   
 
   if (hasPermission === null) {
