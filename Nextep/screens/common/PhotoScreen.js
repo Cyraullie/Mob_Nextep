@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native';
-import { Camera } from 'expo-camera';
-import StorageKit from "../../components/Storage";
+import { Camera, CameraType } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
-import * as MediaLibrary from 'expo-media-library';
+
+import APIKit from "../../components/Api";
 
 export default function PhotoScreen(props) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,15 +20,16 @@ export default function PhotoScreen(props) {
     })();
   }, []);
 
-  const Pic = async () => {
+  const takePicture = async () => {
+    const options = { quality: 0.7 };
     if(!camera) return
-    const photo = await camera.takePictureAsync()
+    const photo = await camera.takePictureAsync(options)
     console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
 
-  const __retakePicture = () => {
+  const retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
   }
@@ -78,12 +79,6 @@ export default function PhotoScreen(props) {
     )
   }
 
-  Back = () => {
-    props.navigation.reset({
-      index: 0,
-      routes: [{ name: 'EditProfile'}], 
-    })
-  }
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -100,6 +95,7 @@ export default function PhotoScreen(props) {
         <>
           <Camera
             style={StyleSheet.absoluteFillObject}
+            type={CameraType.front}
             ref={(r) => {
               camera = r
             }}
@@ -107,12 +103,15 @@ export default function PhotoScreen(props) {
           <View style={styles.button}>
           <TouchableOpacity 
             style={styles.littleButton}
-            onPress={() => Back()}>
+            onPress={() => {props.navigation.reset({
+              index: 0,
+              routes: [{ name: 'EditProfile'}], 
+            })}}>
             <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.littleButton}
-            onPress={() => Pic()}>
+            onPress={takePicture}>
             <Image style={styles.littleButton} source={require("../../assets/camera.png") } />
           </TouchableOpacity>
           </View>
