@@ -4,6 +4,7 @@ import { Camera, CameraType } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import APIKit from "../../components/Api";
+const FormData = require('form-data');
 
 export default function PhotoScreen(props) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,9 +15,7 @@ export default function PhotoScreen(props) {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === 'granted');
-      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
     })();
   }, []);
 
@@ -34,10 +33,20 @@ export default function PhotoScreen(props) {
     setPreviewVisible(false)
   }
 
-  const __savePhoto = () => {
-    MediaLibrary.saveToLibraryAsync(capturedImage.uri).then(() => {
+  const savePhoto = () => {
+    const formData = new FormData();
+
+    formData.append("type", "image/jpg")
+    formData.append("uri", capturedImage.uri)
+    formData.append("name", "test")
+
+    console.log(formData)
+
+    APIKit.updatePhoto(formData).then(res => {console.log(res)}).catch(res => console.log("TTTT" + res))
+   // APIKit.updatePhoto(capturedImage)//.then((u) => {console.log(u)}).catch((u) => {console.log(u)})
+    /*MediaLibrary.saveToLibraryAsync(capturedImage.uri).then(() => {
       setPhoto(undefined);
-    });
+    });*/
   }
 
   const CameraPreview = ({photo, savePhoto, retakePicture}) => {
@@ -52,28 +61,29 @@ export default function PhotoScreen(props) {
         }}
       >
         <ImageBackground
+          
           source={{uri: photo && photo.uri}}
           style={{
             flex: 1,
             justifyContent: "flex-end"
           }}
         >
-        <View style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 10,
-          marginLeft: 10,
-          marginRight: 10,
-        }}>
-        <TouchableOpacity
-          onPress={retakePicture}>
-          <Text style={{color: "#FFFFFF"}}>refaire</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={savePhoto}>
-          <Text style={{color: "#FFFFFF"}}>utiliser</Text>
-        </TouchableOpacity>
-        </View>
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 10,
+            marginLeft: 10,
+            marginRight: 10,
+          }}>
+          <TouchableOpacity
+            onPress={retakePicture}>
+            <Text style={{color: "#FFFFFF"}}>refaire</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={savePhoto}>
+            <Text style={{color: "#FFFFFF"}}>utiliser</Text>
+          </TouchableOpacity>
+          </View>
         </ImageBackground>
       </View>
     )
@@ -90,7 +100,7 @@ export default function PhotoScreen(props) {
   return (
     <View style={styles.container}>
       {previewVisible && capturedImage ? (
-        <CameraPreview photo={capturedImage}  savePhoto={__savePhoto} retakePicture={__retakePicture}/>
+        <CameraPreview photo={capturedImage}  savePhoto={savePhoto} retakePicture={retakePicture}/>
       ) : (
         <>
           <Camera
