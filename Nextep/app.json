@@ -4,12 +4,12 @@
     "slug": "Nextep",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/logo_splash.png",
+      "backgroundColor": "#3e2bc5",
+      "resizeMode": "contain"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,16 +18,27 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "icon":  "./assets/logo.png",
+      "splash": {
+        "image": "./assets/logo_splash.png",
+        "backgroundColor": "#3e2bc5",
+        "resizeMode": "contain"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "splash": {
+        "image": "./assets/logo_splash.png",
+        "backgroundColor": "#3e2bc5",
+        "resizeMode": "contain"
+      },
+      "package": "com.cyril.Nextep"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
     }
   }
 }
