@@ -34,19 +34,18 @@ export default function PhotoScreen(props) {
   }
 
   const savePhoto = () => {
-    const formData = new FormData();
+    const data = new FormData(),
+          filename = capturedImage.uri.split("/").pop()
 
-    formData.append("type", "image/jpg")
-    formData.append("uri", capturedImage.uri)
-    formData.append("name", "test")
+    let picture = {
+      uri: capturedImage.uri,
+      type: "image/jpeg",
+      name: filename
+    }
+    data.append('photo', picture);
+    console.log(data)
 
-    console.log(formData)
-
-    APIKit.updatePhoto(formData).then(res => {console.log(res)}).catch(res => console.log("TTTT" + res))
-   // APIKit.updatePhoto(capturedImage)//.then((u) => {console.log(u)}).catch((u) => {console.log(u)})
-    /*MediaLibrary.saveToLibraryAsync(capturedImage.uri).then(() => {
-      setPhoto(undefined);
-    });*/
+    APIKit.updatePhoto(data).then(res => {console.log(res)}).catch(res => console.log("TTTT" + res))
   }
 
   const CameraPreview = ({photo, savePhoto, retakePicture}) => {
