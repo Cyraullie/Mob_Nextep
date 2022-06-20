@@ -38,7 +38,7 @@ StorageKit.get("user_token").then((res) => {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", 
-      "Content-Type": "multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2),
+      "Content-Type": "multipart/form-data",//; charset=utf-8; boundary=" + Math.random().toString().substr(2),
       Authorization: "Bearer " + res,
     },   
   }; 
@@ -60,20 +60,8 @@ class API {
       return connectAPI.post("profile", payload, config)
     }
 
-
-    updatePhoto(formData){
-      console.log( formData)
-
-      return connectAPI.post("profile/photo", {photo: formData}, configFromData)
-
-      /*return axios.post("http://192.168.0.48:8000/api/nxp/profile/photo", formData, {
-        headers: {
-          Authorization: "Bearer UfsH7oivFo7MgrM35bl6ZTevWaJblI32klOcdtjeIBSQg1imnNcQDAr7rWM4" ,
-        },
-        onUploadProgress: progressEvent => {
-          console.log("Upload Progress: " + Math.round(progressEvent.loaded / progressEvent.total * 100) + "%")
-        }  
-      })*/
+    updatePhoto(file){
+      return connectAPI.post("profile/photo", file, configFromData);
     }
     
 
