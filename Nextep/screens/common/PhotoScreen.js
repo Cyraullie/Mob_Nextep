@@ -16,11 +16,6 @@ export default function PhotoScreen(props) {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
-      const availableRatios = await camera.getSupportedRatiosAsync()
-      console.log(availableRatios)
-      
-      const availablePictureSizes = await camera.getAvailablePictureSizesAsync("1:1")
-      console.log(availablePictureSizes)
     })();
   }, []);
 
@@ -28,7 +23,6 @@ export default function PhotoScreen(props) {
     const options = { quality: 0.7 };
     if(!camera) return
     const photo = await camera.takePictureAsync(options)
-    console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
@@ -48,7 +42,6 @@ export default function PhotoScreen(props) {
       name: filename
     }
     data.append('photo', picture);
-    console.log(data)
 
     APIKit.updatePhoto(data).then(res => {props.navigation.reset({
       index: 0,

@@ -25,7 +25,6 @@ export default class DataProfileView extends Component {
     let payload = { _method, username, email, firstname, lastname, wallet_address };
 
     const onSuccess = ({ data }) => {
-      console.log("updated!!!")
       this.props.nav.reset({
         index: 0,
         routes: [{ name: 'Mon profil' }],
@@ -42,13 +41,11 @@ export default class DataProfileView extends Component {
   onEmailChange = (email) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(email) === false) {
-      console.log("Email is Not Correct");
       this.setState({ email: email })
       return false;
     }
     else {
       this.setState({ email: email })
-      console.log("Email is Correct");
     }
   };
 

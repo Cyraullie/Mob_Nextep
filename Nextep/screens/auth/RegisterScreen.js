@@ -25,13 +25,11 @@ export default class RegisterScreen extends Component {
     onUsernameChange = (username) => {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
       if (reg.test(username) === false) {
-        console.log("Email is Not Correct");
         this.setState({ username: username })
         return false;
       }
       else {
         this.setState({ username: username })
-        console.log("Email is Correct");
       }
     };
 
