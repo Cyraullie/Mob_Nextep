@@ -45,7 +45,10 @@ export default function PhotoScreen(props) {
     data.append('photo', picture);
     console.log(data)
 
-    APIKit.updatePhoto(data).then(res => {console.log(res)}).catch(res => console.log("TTTT" + res))
+    APIKit.updatePhoto(data).then(res => {props.navigation.reset({
+      index: 0,
+      routes: [{ name: 'EditProfile'}], 
+    })})
   }
 
   const CameraPreview = ({photo, savePhoto, retakePicture}) => {
