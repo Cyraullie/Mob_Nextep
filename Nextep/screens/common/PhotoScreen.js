@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -16,6 +16,11 @@ export default function PhotoScreen(props) {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
+      const availableRatios = await camera.getSupportedRatiosAsync()
+      console.log(availableRatios)
+      
+      const availablePictureSizes = await camera.getAvailablePictureSizesAsync("1:1")
+      console.log(availablePictureSizes)
     })();
   }, []);
 
@@ -59,34 +64,34 @@ export default function PhotoScreen(props) {
           flex: 1,
           width: '100%',
           height: '100%',
-
         }}
       >
         <ImageBackground
           
           source={{uri: photo && photo.uri}}
           style={{
-            flex: 1,
-            justifyContent: "flex-end"
+            width: "100%",
+            aspectRatio: 2 / 3,
+            marginTop: 100
           }}
-        >
-          <View style={{
+        />
+        <View style={{
             flexDirection: "row",
+            width: "100%",
             justifyContent: "space-between",
-            marginBottom: 10,
-            marginLeft: 10,
-            marginRight: 10,
+            height: 50
           }}>
           <TouchableOpacity
-            onPress={retakePicture}>
+            onPress={retakePicture}
+            style={styles.previewButton}>
             <Text style={{color: "#FFFFFF"}}>refaire</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={savePhoto}>
+            onPress={savePhoto}
+            style={styles.previewButton}>
             <Text style={{color: "#FFFFFF"}}>utiliser</Text>
           </TouchableOpacity>
           </View>
-        </ImageBackground>
       </View>
     )
   }
@@ -105,14 +110,7 @@ export default function PhotoScreen(props) {
         <CameraPreview photo={capturedImage}  savePhoto={savePhoto} retakePicture={retakePicture}/>
       ) : (
         <>
-          <Camera
-            style={StyleSheet.absoluteFillObject}
-            type={CameraType.front}
-            ref={(r) => {
-              camera = r
-            }}
-          />
-          <View style={styles.button}>
+        <View style={styles.buttonBack}>
           <TouchableOpacity 
             style={styles.littleButton}
             onPress={() => {props.navigation.reset({
@@ -121,6 +119,15 @@ export default function PhotoScreen(props) {
             })}}>
             <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
           </TouchableOpacity>
+        </View>
+        <Camera
+          style={styles.cameraStyle}
+          type={CameraType.front}
+          ref={(r) => {
+            camera = r
+          }}
+        />
+        <View style={styles.button}>
           <TouchableOpacity 
             style={styles.littleButton}
             onPress={takePicture}>
@@ -138,14 +145,35 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  littleButton: {
+  previewButton: {
+    backgroundColor: 'blue',
+    width: (Dimensions.get('window').width / 2) - 2,
     height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10
+  },
+  cameraStyle: {
+    width: "100%",
+    aspectRatio: 2 / 3,
+    marginTop: "auto",
+    marginBottom: "auto"
+  },
+  littleButton: {
+    height: 51,
     width: 58
   },  
   button: {
     flexDirection: "row",
     marginRight: 10,
-    marginTop: 30,
-    justifyContent: "flex-end"
+    marginTop: 10,
+    justifyContent: "center"
+  },
+  buttonBack: {
+    flexDirection: "row",
+    marginLeft: 10,
+    marginTop: 40,
+    marginBottom: 10,
+    justifyContent: "flex-start"
   }
 });
