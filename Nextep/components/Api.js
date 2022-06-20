@@ -1,13 +1,9 @@
 import axios from "axios";
-import { BASE_URL, BSC_API_TOKEN } from "@env"
+import { BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
 import StorageKit from "./Storage";
 
-var api = require("bscscan-api").init(BSC_API_TOKEN);
-
-const bscUrl = "https://api.bscscan.com/";
-
 let connectBscApi = axios.create({
-  baseURL: bscUrl,
+  baseURL: BSC_URL,
   timeout: 2000,
 })
 
@@ -38,7 +34,7 @@ StorageKit.get("user_token").then((res) => {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", 
-      "Content-Type": "multipart/form-data",//; charset=utf-8; boundary=" + Math.random().toString().substr(2),
+      "Content-Type": "multipart/form-data",
       Authorization: "Bearer " + res,
     },   
   }; 
