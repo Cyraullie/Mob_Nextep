@@ -19,25 +19,17 @@ export default function PhotoScreen(props) {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
-      SecureStore.getItemAsync("user_token").then(
-        (token) => {
-          setUserToken(token)
-        })
+
+      setUserToken(await SecureStore.getItemAsync("user_token"))
     })();
     
   }, []);
   
-/*
-SecureStore.getItemAsync("user_token").then(
-      (token) => {
-        setUserToken(token)
-      })
-
-*/
   const takePicture = async () => {
     const options = { quality: 0.7 };
     if(!camera) return
     const photo = await camera.takePictureAsync(options)
+
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
@@ -81,9 +73,8 @@ SecureStore.getItemAsync("user_token").then(
       <View
         style={{
           backgroundColor: 'transparent',
-          flex: 1,
-          width: '100%',
-          height: '100%',
+          marginTop: "auto",
+          marginBottom: "auto"
         }}
       >
         <ImageBackground
@@ -92,7 +83,6 @@ SecureStore.getItemAsync("user_token").then(
           style={{
             width: "100%",
             aspectRatio: 2 / 3,
-            marginTop: 100
           }}
         />
         <View style={{
