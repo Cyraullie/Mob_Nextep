@@ -24,7 +24,7 @@ export default class ProfileScreen extends Component {
       return (
         <View style={styles.container}>
           <Text>Profil</Text>
-          <DataProfileView nav={this.props.navigation} type={"Profile"} />
+          <DataProfileView nav={this.props.navigation}/>
         </View>
       );
     }

@@ -6,15 +6,14 @@ import {
   Text,
   TextInput,
   View,
-  Button,
-  SafeAreaView,
 } from "react-native";
 
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { showMessage } from "react-native-flash-message";
 
-import APIKit from "../../components/Api";
-import StorageKit from "../../components/Storage";
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios";
+import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -39,7 +38,7 @@ export default class LoginScreen extends Component {
         const payload = { username, password };
         const onSuccess = ({ data }) => {
             this.setState({ userToken: data });
-            StorageKit.set("user_token", this.state.userToken);
+            SecureStore.setItemAsync("user_token", this.state.userToken);
             this.props.auth(data);
         };
       
@@ -52,7 +51,9 @@ export default class LoginScreen extends Component {
             });
         };
 
-        APIKit.getToken(payload).then(onSuccess).catch(onFailure);
+        axios.post(BASE_URL +'mytoken', payload)
+        .then(onSuccess)
+        .catch(onFailure);
 
     };
  

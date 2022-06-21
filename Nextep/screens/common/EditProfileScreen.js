@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
-  Text,
-  TextInput,
   View,
-  Button,
-  SafeAreaView,
 } from "react-native";
 
-import DataProfileView from "../../components/ProfileData";
+import DataEditProfileView from "../../components/EditProfileData";
 
 
 export default class ProfileScreen extends Component {
@@ -23,7 +17,7 @@ export default class ProfileScreen extends Component {
     render() {
       return (
         <View style={styles.container}>
-          <DataProfileView nav={this.props.navigation} type={"Edit"}/>
+          <DataEditProfileView nav={this.props.navigation}/>
         </View>
       );
     }

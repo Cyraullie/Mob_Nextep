@@ -23,7 +23,7 @@ import Photo from "../screens/common/PhotoScreen"
 
 const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
 const Drawer = createDrawerNavigator();
-import StorageKit from "../components/Storage";
+import * as SecureStore from 'expo-secure-store';
 
 class MyDrawer extends Component {
   state = {
@@ -31,13 +31,10 @@ class MyDrawer extends Component {
   };
 
   constructor(props) {
-    super(props)
-    this.getStoredToken;
+    super(props) 
+    const userToken = SecureStore.getItemAsync("user_token").then(
+      (token) => { this.handleTokenUpdate(token) });
     this.handleTokenUpdate = this.handleTokenUpdate.bind(this);
-  }
-
-  async getStoredToken(){
-    this.state = {userToken: await StorageKit.get("user_token")} 
   }
 
   handleTokenUpdate(data) {
@@ -66,7 +63,7 @@ class MyDrawer extends Component {
               <DrawerContentScrollView {...props}>
                 <DrawerItemList {...props} />
                 <DrawerItem label="Logout" onPress={() => {
-                  StorageKit.remove("user_token")
+                  SecureStore.deleteItemAsync("user_token")
                   this.handleTokenUpdate(null)
                   props.navigation.closeDrawer()
                 }

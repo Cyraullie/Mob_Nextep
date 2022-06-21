@@ -2,23 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios";
+import { BASE_URL } from "@env"
 
-import APIKit from "../../components/Api";
 const FormData = require('form-data');
 
 export default function PhotoScreen(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null);
+  const [userToken, setUserToken] = useState(null)
   let camera;
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
+      SecureStore.getItemAsync("user_token").then(
+        (token) => {
+          setUserToken(token)
+        })
     })();
+    
   }, []);
+  
+/*
+SecureStore.getItemAsync("user_token").then(
+      (token) => {
+        setUserToken(token)
+      })
 
+*/
   const takePicture = async () => {
     const options = { quality: 0.7 };
     if(!camera) return
@@ -43,9 +58,21 @@ export default function PhotoScreen(props) {
     }
     data.append('photo', picture);
 
-    APIKit.updatePhoto(data).then(res => {props.navigation.reset({
-      index: 0,
-      routes: [{ name: 'EditProfile'}], 
+    let config = {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", 
+        "Content-Type": "multipart/form-data",
+        Authorization: "Bearer " + userToken,
+      },   
+    };
+
+    axios.post(BASE_URL + "profile/photo", data, config)
+    .then(() => {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: 'EditProfile'}], 
     })})
   }
 

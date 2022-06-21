@@ -14,7 +14,6 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 //import { Picker } from "@react-native-picker/picker";
 
 //import PickerView from "../../components/Picker";
-import APIKit from "../../components/Api";
 
 export default class RegisterScreen extends Component {
     constructor(props) {

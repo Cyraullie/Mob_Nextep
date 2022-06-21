@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, ScrollView, Linking  } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, ScrollView } from "react-native";
 import { Card } from "react-native-elements";
-import { IMG_URL } from "@env"
 import Moment from "moment";
-import StorageKit from "./Storage";
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios";
+import { IMG_URL, BASE_URL } from "@env"
 
 import APIKit from "./Api";
 
@@ -13,181 +14,66 @@ export default class DataProfileView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { profile: "", profileData: [], _method: "PATCH", username: "", email: "", firstname: "", lastname: "", wallet_address: ""}
+    SecureStore.getItemAsync("user_token").then(
+      (token) => {
+        this.setState({ userToken: token });
+        const axiosConfig = {headers: { Authorization: "Bearer " + token}};
+        axios.get(BASE_URL + "profile", axiosConfig)
+        .then(response => {
+          this.setState({data: response.data});
+        })
+      .catch(error => {
+        console.log(error);
+      }); });
+      
+    this.state = { profile: "", profileData: [], _method: "PATCH", username: "", email: "", firstname: "", lastname: "", wallet_address: "", data: {}}
   }
 
   onPressEdit = () => {
-    this.props.nav.navigate("EditProfile")
-  }
-
-  onPressUpdate = () => {
-    let { _method, username, email, firstname, lastname, wallet_address } = this.state;
-    let payload = { _method, username, email, firstname, lastname, wallet_address };
-
-    const onSuccess = ({ data }) => {
-      this.props.nav.reset({
-        index: 0,
-        routes: [{ name: 'Mon profil' }],
-      })
-    };
-
-    const onFailure = (error) => {
-        console.log(error && error.response);
-    };
-
-    APIKit.updateProfile(payload).then(onSuccess).catch(onFailure)
-  }
-
-  onEmailChange = (email) => {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(email) === false) {
-      this.setState({ email: email })
-      return false;
-    }
-    else {
-      this.setState({ email: email })
-    }
-  };
-
-  onUsernameChange = (username) => {
-      this.setState({ username: username });
-  };
-  
-  onLastnameChange = (lastname) => {
-    this.setState({ lastname: lastname });
-  };
-    
-  onFirstnameChange = (firstname) => {
-    this.setState({ firstname: firstname });
-  };
-
-  onWalletAddressChange = (wallet_address) => {
-    this.setState({ wallet_address: wallet_address });
-  };
-  
-
-
-  getProfileData() {
-    APIKit.getProfile()
-    .then((res) => {
-        let data = res.data
-        APIKit.getContractName(contract_address).then((contract_res)=>{
-          APIKit.getTokenQuantity(contract_address, data.wallet_address).then((quantity_res)=>{
-            let contract_name = contract_res.data.result[0].ContractName;
-            let quantity = quantity_res.data.result / 1000000000000000000
-            Moment.locale("fr");
-            const profileShift = (
-              <ScrollView >
-                <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
-                  <View style={styles.cardTitle}>
-                    <Text style={styles.textTitle}>{data.username} </Text>
-                    <TouchableHighlight  
-                    onPress={this.onPressEdit.bind(this)}>
-                      <Image style={styles.iconButton} source={require("../assets/edit-icon.png")}></Image>
-                    </TouchableHighlight>
-                  </View>
-                  <View>
-                      <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
-                      <Text>{data.firstname} {data.lastname}</Text>
-                      <Text>{data.email}</Text>
-                      <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
-                      <Text>Tokens :</Text>
-                      
-                      <Text>{quantity} {contract_name} </Text>
-                                            
-    
-                  </View>
-                </Card>
-              </ScrollView>
-            );
-            this.setState({
-                profileData: profileShift,
-            })
-          })
-        })
-      })
-  }
-  
-
-  getEditProfileData() {
-    APIKit.getProfile()
-    .then(async (res) => {
-      let data = res.data
-      var address = ""
-      this.setState({ username: data.username,  email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: data.wallet_address })
-      address = await StorageKit.get("qr_scan")
-      await StorageKit.remove("qr_scan")
-      if(address !== null){
-        this.setState({wallet_address: address});
-      }
-
-      Moment.locale("fr");
-      const profileShift = (
-        
-        <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
-          <ScrollView >
-          <View style={styles.cardTitle}>
-            <Text style={styles.textTitle}>{data.username} </Text>
-          </View>
-          <View>
-            
-            <View>
-              <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} /> 
-              <TouchableHighlight 
-                    onPress={() => this.props.nav.navigate("Photo")}>
-                  <Image style={styles.littleButton} source={require("../assets/camera.png") } />
-                </TouchableHighlight>
-              </View>
-              
-              <Text>Prénom</Text>
-              <TextInput defaultValue={this.state.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
-              <Text>Nom</Text>
-              <TextInput defaultValue={this.state.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
-              
-              
-              <Text>Pseudo</Text>
-              <TextInput defaultValue={this.state.username} style={styles.input} onChangeText={this.onUsernameChange}/>
-              <Text>Email</Text>
-              <TextInput defaultValue={this.state.email} style={styles.input} onChangeText={this.onEmailChange}/>
-              <Text>Wallet_address</Text>
-              <View style={styles.wallet}>
-                <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
-                
-                <TouchableHighlight 
-                    onPress={() => this.props.nav.navigate("ScanQr")}>
-                  <Image style={styles.littleButton} source={require("../assets/camera.png") } />
-                </TouchableHighlight>
-              </View>
-              <TouchableHighlight
-                  style={styles.submit}
-                  onPress={this.onPressUpdate.bind(this)}
-                  >
-                    <Text style={styles.submitText}>Mettre à jour</Text>
-                </TouchableHighlight>
-          </View>
-          </ScrollView>
-        </Card>
-      );
-      this.setState({
-          profileData: profileShift,
-      })
+    this.props.nav.reset({
+      index: 0,
+      routes: [{ name: 'EditProfile' }],
     })
   }
+  getProfileData() {
+    APIKit.getContractName(contract_address).then((contract_res)=>{
+      APIKit.getTokenQuantity(contract_address, this.state.data.wallet_address).then((quantity_res)=>{
+        let contract_name = contract_res.data.result[0].ContractName;
+        let quantity = quantity_res.data.result / 1000000000000000000
+        Moment.locale("fr");
+        const profileShift = (
+          <ScrollView >
+            <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
+              <View style={styles.cardTitle}>
+                <Text style={styles.textTitle}>{this.state.data.username} </Text>
+                <TouchableHighlight  
+                onPress={this.onPressEdit.bind(this)}>
+                  <Image style={styles.iconButton} source={require("../assets/edit-icon.png")}></Image>
+                </TouchableHighlight>
+              </View>
+              <View>
+                  <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+this.state.data.picture}} />
+                  <Text>{this.state.data.firstname} {this.state.data.lastname}</Text>
+                  <Text>{this.state.data.email}</Text>
+                  <Text>Création du compte : {Moment(this.state.data.created_at).format("DD MMM Y")}</Text>
+                  <Text>Tokens :</Text>
+                  
+                  <Text>{quantity} {contract_name} </Text>
+                                        
 
+              </View>
+            </Card>
+          </ScrollView>
+        );
+        this.setState({
+            profileData: profileShift,
+        })
+      })
+    })   
+  }
   
   componentDidMount() {
-    switch(this.props.type) {
-      case "Profile":
-        <>
-          {this.getProfileData()}
-        </>
-        break;
-      case "Edit":
-        <>
-          {this.getEditProfileData()}
-        </>
-        break;
-    }    
+    this.getProfileData()  
   }
 
   render() {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Image } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import StorageKit from "../../components/Storage";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function ScanQrScreen(props) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -25,16 +26,20 @@ export default function ScanQrScreen(props) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     if (data.substring(0, 2) === "0x"){ 
-      StorageKit.set("qr_scan", data)
-      props.navigation.reset({
+      SecureStore.setItemAsync("qr_scan", data).then(() => {
+        props.navigation.reset({
           index: 0,
           routes: [{ name: 'EditProfile'}], 
+        })
       })
+      
     }else if (data.replace("ethereum:", "").substring(0, 2) === "0x") {
-      StorageKit.set("qr_scan", data.replace("ethereum:", ""));
-      props.navigation.reset({
-          index: 0,
-          routes: [{ name: 'EditProfile'}], 
+      SecureStore.setItemAsync("qr_scan", data.replace("ethereum:", "")).then(() => {
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'EditProfile'}], 
+            
+        })
       })
     }else alert("Ceci n'est pas une adresse de compte porte-monnaie")
     
