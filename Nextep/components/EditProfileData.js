@@ -126,7 +126,18 @@ export default class DataProfileView extends Component {
             <Text>Wallet_address</Text>
             <View style={styles.wallet}>
               <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
-              
+              <TouchableHighlight 
+                  onPress={() => axios.delete(BASE_URL + "profile/wallet", {headers: { 
+                    "Access-Control-Allow-Origin": "*", 
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                    Authorization: "Bearer " + this.state.userToken}
+                  }).then(this.props.nav.reset({
+                    index: 0,
+                    routes: [{ name: 'EditProfile'}], 
+                }))}>
+                <Image style={styles.littleButton} source={require("../assets/trash.png") } />
+              </TouchableHighlight>
               <TouchableHighlight 
                   onPress={() => this.props.nav.navigate("ScanQr")}>
                 <Image style={styles.littleButton} source={require("../assets/camera.png") } />
@@ -232,7 +243,7 @@ const styles = StyleSheet.create({
   wallet_input: {
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
-    width: "70%",
+    width: "50%",
     paddingLeft: 20,
     marginLeft: 20,
     marginRight: 20,

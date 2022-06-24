@@ -57,10 +57,9 @@ export default class DataProfileView extends Component {
                   <Text>{this.state.data.email}</Text>
                   <Text>Création du compte : {Moment(this.state.data.created_at).format("DD MMM Y")}</Text>
                   <Text>Tokens :</Text>
-                  
+               
                   <Text>{quantity} {contract_name} </Text>
-                                        
-
+                
               </View>
             </Card>
           </ScrollView>
