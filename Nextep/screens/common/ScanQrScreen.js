@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Image } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera, CameraType } from 'expo-camera';
 import { TouchableHighlight } from "react-native-gesture-handler";
 import * as SecureStore from 'expo-secure-store';
 
@@ -11,7 +12,7 @@ export default function ScanQrScreen(props) {
 
   useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -54,17 +55,22 @@ export default function ScanQrScreen(props) {
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
       <View style={styles.button}>
-      <TouchableHighlight 
-        style={styles.littleButton}
-        onPress={() => Back()}>
-        <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
-      </TouchableHighlight>
+        <TouchableHighlight 
+          style={styles.littleButton}
+          onPress={() => Back()}>
+          <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
+        </TouchableHighlight>
       </View>
+      <Camera
+        barCodeScannerSettings={{
+          BarCodeScanner: [BarCodeScanner.Constants.BarCodeType.qr]
+        }}
+        style={styles.cameraStyle}
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        cameraType={CameraType.back}
+      />
+      
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
@@ -74,6 +80,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+  },
+  cameraStyle: {
+    width: "100%",
+    aspectRatio: 2 / 3,
+    marginTop: "auto",
+    marginBottom: "auto"
   },
   littleButton: {
     height: 50,
