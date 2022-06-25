@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: 200,
     width: 200,
+    borderRadius: 100,
   },
   littleButton: {
     height: 50,
