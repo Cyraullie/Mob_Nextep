@@ -20,7 +20,7 @@ export default function ScanQrScreen(props) {
   Back = () => {
     props.navigation.reset({
       index: 0,
-      routes: [{ name: 'EditProfile'}], 
+      routes: [{ name: 'Mon profil'}], 
     })
   }
 
@@ -30,7 +30,7 @@ export default function ScanQrScreen(props) {
       SecureStore.setItemAsync("qr_scan", data).then(() => {
         props.navigation.reset({
           index: 0,
-          routes: [{ name: 'EditProfile'}], 
+          routes: [{ name: 'Mon profil'}], 
         })
       })
       
@@ -38,7 +38,7 @@ export default function ScanQrScreen(props) {
       SecureStore.setItemAsync("qr_scan", data.replace("ethereum:", "")).then(() => {
         props.navigation.reset({
             index: 0,
-            routes: [{ name: 'EditProfile'}], 
+            routes: [{ name: 'Mon profil'}], 
             
         })
       })

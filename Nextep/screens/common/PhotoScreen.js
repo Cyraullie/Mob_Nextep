@@ -106,7 +106,7 @@ export default function PhotoScreen(props) {
     .then(() => {
       props.navigation.reset({
         index: 0,
-        routes: [{ name: 'EditProfile'}], 
+        routes: [{ name: 'Mon profil'}], 
     })})
   }
 
@@ -167,7 +167,7 @@ export default function PhotoScreen(props) {
             style={styles.littleButton}
             onPress={() => {props.navigation.reset({
               index: 0,
-              routes: [{ name: 'EditProfile'}], 
+              routes: [{ name: 'Mon profil'}], 
             })}}>
             <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
           </TouchableOpacity>
