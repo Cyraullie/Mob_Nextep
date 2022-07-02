@@ -16,7 +16,6 @@ import Parameter from "../screens/common/ParameterScreen"
 import Partner from "../screens/common/PartnerScreen"
 import Pot from "../screens/common/PotScreen"
 import Profile from "../screens/common/ProfileScreen"
-import EditProfile from "../screens/common/EditProfileScreen"
 import Vote from "../screens/common/VoteScreen"
 import ScanQr from "../screens/common/ScanQrScreen"
 import Photo from "../screens/common/PhotoScreen"
@@ -84,10 +83,6 @@ class MyDrawer extends Component {
             <Drawer.Screen name="Chat" component={Chat} />
             <Drawer.Screen name="Vote" component={Vote} />
 
-            
-            <Drawer.Screen name="EditProfile" component={(props) => <EditProfile {...props}/>}  options={{
-                  drawerItemStyle: { display: 'none' }
-            }}/>
             <Drawer.Screen name="ScanQr" component={(props) => <ScanQr {...props}/>}  options={{
                   drawerItemStyle: { display: 'none' },
                   headerShown: false

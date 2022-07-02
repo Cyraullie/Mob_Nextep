@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, ImageBackground, Dimensions, Platform } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 import { BASE_URL } from "@env"
+import * as ImagePicker from 'expo-image-picker';
 
 const FormData = require('form-data');
 
@@ -13,6 +14,7 @@ export default function PhotoScreen(props) {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null);
   const [userToken, setUserToken] = useState(null)
+
   let camera;
 
   useEffect(() => {
@@ -31,8 +33,24 @@ export default function PhotoScreen(props) {
     const photo = await camera.takePictureAsync(options)
 
     setPreviewVisible(true)
-    setCapturedImage(photo)
+    setCapturedImage(photo)    
   }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setPreviewVisible(true)
+      setCapturedImage(result)
+    }
+  };  
 
   const retakePicture = () => {
     setCapturedImage(null)
@@ -41,14 +59,38 @@ export default function PhotoScreen(props) {
 
   const savePhoto = () => {
     const data = new FormData(),
-          filename = capturedImage.uri.split("/").pop()
+    filename = capturedImage.uri.split("/").pop()
 
-    let picture = {
-      uri: capturedImage.uri,
-      type: "image/jpeg",
-      name: filename
+    let picture = {}
+
+    if(Platform.OS === 'ios'){
+      //TODO save photo on ios doesn't work for picture take now
+      console.log("ios")
+      console.log(capturedImage)  
+      
+      picture = {
+        uri: capturedImage.uri,
+        type: "image/jpg",
+        name: filename
+      }
+    }else if(Platform.OS === 'android') {
+      console.log("android")
+      console.log(capturedImage) 
+      picture = {
+        uri: capturedImage.uri,
+        type: "image/jpeg",
+        name: filename
+      }
     }
+
+
+
+
     data.append('photo', picture);
+
+
+    console.log(Platform.OS)
+    console.log(data)
 
     let config = {
       headers: {
@@ -64,7 +106,7 @@ export default function PhotoScreen(props) {
     .then(() => {
       props.navigation.reset({
         index: 0,
-        routes: [{ name: 'EditProfile'}], 
+        routes: [{ name: 'Mon profil'}], 
     })})
   }
 
@@ -125,7 +167,7 @@ export default function PhotoScreen(props) {
             style={styles.littleButton}
             onPress={() => {props.navigation.reset({
               index: 0,
-              routes: [{ name: 'EditProfile'}], 
+              routes: [{ name: 'Mon profil'}], 
             })}}>
             <Image style={styles.littleButton} source={require("../../assets/back-arrow.png") } />
           </TouchableOpacity>
@@ -138,6 +180,12 @@ export default function PhotoScreen(props) {
           }}
         />
         <View style={styles.button}>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          activeOpacity={0.5}
+          onPress={pickImage}>
+          <Image style={styles.littleButton} source={require("../../assets/picture.png") } />
+        </TouchableOpacity>
           <TouchableOpacity 
             style={styles.littleButton}
             onPress={takePicture}>
