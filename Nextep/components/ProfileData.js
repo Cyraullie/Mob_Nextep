@@ -14,25 +14,29 @@ let contract_address = "0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3"
 export default class DataProfileView extends Component {
   constructor(props) {
     super(props);
+    
+    this.state = { profile: "", profileData: [], _method: "PATCH", data: {}}
+  }
+
+  getData = () => {
     SecureStore.getItemAsync("user_token").then(
       (token) => {
         this.setState({ userToken: token });
         const axiosConfig = {headers: { Authorization: "Bearer " + token}};
         axios.get(BASE_URL + "profile", axiosConfig)
         .then(response => {
-          this.setState({data: response.data});
+          this.getProfileData(response.data) 
         })
       .catch(error => {
         console.log(error);
       }); 
     });
-    
-  this.state = { profile: "", profileData: [], _method: "PATCH", data: {}}
   }
 
+
   onPressUpdate = () => {
-    let { _method, username, email, firstname, lastname, wallet_address } = this.state;
-    let payload = { _method, username, email, firstname, lastname, wallet_address };
+    let { _method, username, email, firstname, lastname, wallet_address, description } = this.state;
+    let payload = { _method, username, email, firstname, lastname, wallet_address, description };
 
     const axiosConfig = {headers: { 
       "Access-Control-Allow-Origin": "*", 
@@ -65,6 +69,10 @@ export default class DataProfileView extends Component {
     }
   };
 
+  onDescriptionChange = (description) => {
+    this.setState({ description: description });
+};
+
   onUsernameChange = (username) => {
       this.setState({ username: username });
   };
@@ -81,19 +89,19 @@ export default class DataProfileView extends Component {
     this.setState({ wallet_address: wallet_address });
   };  
 
-  getProfileData() {
-    this.setState({ username: this.state.data.username, email: this.state.data.email, firstname: this.state.data.firstname, lastname: this.state.data.lastname,  wallet_address: "" })
+  getProfileData(data) {
+    this.setState({ username: data.username, description: data.description, email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: "", description: data.description})
     SecureStore.getItemAsync("qr_scan").then(
       (address) => {
         if(address !== null){
           this.setState({ wallet_address: address })
           SecureStore.deleteItemAsync("qr_scan")
         }else {
-          this.setState({wallet_address: this.state.data.wallet_address});
+          this.setState({ wallet_address: data.wallet_address });
         }
       
       APIKit.getContractName(contract_address).then((contract_res)=>{
-        APIKit.getTokenQuantity(contract_address, this.state.data.wallet_address).then((quantity_res)=>{
+        APIKit.getTokenQuantity(contract_address, data.wallet_address).then((quantity_res)=>{
           let contract_name = contract_res.data.result[0].ContractName;
           let quantity = quantity_res.data.result / 1000000000000000000
           Moment.locale("fr");
@@ -101,31 +109,34 @@ export default class DataProfileView extends Component {
               <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
               <ScrollView >
                 <View style={styles.cardTitle}>
-                  <Text style={styles.textTitle}>{this.state.data.username} </Text>
+                  <Text style={styles.textTitle}>{data.username} </Text>
                 </View>
 
                 <View>
                   <TouchableHighlight 
                     style={styles.logo}
                     onPress={() => this.props.nav.navigate("Photo")}>
-                    <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+this.state.data.picture}} />
+                    <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
                   </TouchableHighlight>
 
+                  <Text>Description</Text>
+                  <TextInput multiline={true} defaultValue={data.description} style={styles.inputArea} onChangeText={this.onDescriptionChange}></TextInput>
+
                   <Text>Prénom</Text>
-                  <TextInput defaultValue={this.state.data.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
+                  <TextInput defaultValue={data.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
 
                   <Text>Nom</Text>
-                  <TextInput defaultValue={this.state.data.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
+                  <TextInput defaultValue={data.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
                   
                   <Text>Pseudo</Text>
-                  <TextInput defaultValue={this.state.data.username} style={styles.input} onChangeText={this.onUsernameChange}/>
+                  <TextInput defaultValue={data.username} style={styles.input} onChangeText={this.onUsernameChange}/>
 
                   <Text>Email</Text>
-                  <TextInput editable={false} defaultValue={this.state.data.email} style={styles.input} />
+                  <TextInput editable={false} defaultValue={data.email} style={styles.input} />
 
                   <Text>Wallet_address</Text>
                   <View style={styles.wallet}>
-                    <TextInput defaultValue={this.state.data.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
+                    <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
                     <TouchableHighlight 
                         onPress={() => axios.delete(BASE_URL + "profile/wallet", {headers: { 
                           "Access-Control-Allow-Origin": "*", 
@@ -150,7 +161,7 @@ export default class DataProfileView extends Component {
                         <Text style={styles.submitText}>Mettre à jour</Text>
                     </TouchableHighlight>
 
-                  <Text>Création du compte : {Moment(this.state.data.created_at).format("DD MMM Y")}</Text>
+                  <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
                   <Text>Tokens :</Text>
                 
                   <Text>mettre un component pour afficher les nexteps de tous les wallet</Text>
@@ -169,7 +180,7 @@ export default class DataProfileView extends Component {
   }
   
   componentDidMount() {
-    this.getProfileData()  
+    this.getData()
   }
 
   render() {
@@ -218,6 +229,16 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 5,
     height: 30,
+  },
+  inputArea: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+    height: 100,
+    paddingTop: 5,
   },
   iconButton: {
     height: 40,
