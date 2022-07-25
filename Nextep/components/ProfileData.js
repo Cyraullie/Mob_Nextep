@@ -112,8 +112,25 @@ export default class DataProfileView extends Component {
 
         for(let i = 0; i < walletArr.length; i++){
           let quantitie = await APIKit.getTokenQuantity(contract_address, walletArr[i].address)
+          console.log(walletArr[i])
+          console.log(BASE_URL + "profile/wallet/" + walletArr[i].id)
           walletData.push(
+            <>
             <Text>{walletArr[i].address} : {"\n"} {quantitie.data.result / 1000000000000000000} Nextep</Text>
+            <TouchableHighlight 
+                onPress={() => axios.delete(BASE_URL + "profile/wallet/" + walletArr[i].id, {headers: { 
+                  "Access-Control-Allow-Origin": "*", 
+                  "Access-Control-Allow-Headers": "Content-Type",
+                  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                  Authorization: "Bearer " + this.state.userToken}
+                }).then(this.props.nav.reset({
+                  index: 0,
+                  routes: [{ name: 'Mon profil'}], 
+              }))}>
+              <Image style={styles.littleButton} source={require("../assets/trash.png") } />
+            </TouchableHighlight>
+            </>
+            
           )
         }
 
@@ -155,18 +172,7 @@ export default class DataProfileView extends Component {
                 <Text>Wallet_address</Text>
                 <View style={styles.wallet}>
                   <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
-                  <TouchableHighlight 
-                      onPress={() => axios.delete(BASE_URL + "profile/wallet", {headers: { 
-                        "Access-Control-Allow-Origin": "*", 
-                        "Access-Control-Allow-Headers": "Content-Type",
-                        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                        Authorization: "Bearer " + this.state.userToken}
-                      }).then(this.props.nav.reset({
-                        index: 0,
-                        routes: [{ name: 'Mon profil'}], 
-                    }))}>
-                    <Image style={styles.littleButton} source={require("../assets/trash.png") } />
-                  </TouchableHighlight>
+                  
                   <TouchableHighlight 
                       onPress={() => this.props.nav.navigate("ScanQr")}>
                     <Image style={styles.littleButton} source={require("../assets/camera.png") } />
@@ -178,6 +184,7 @@ export default class DataProfileView extends Component {
                   {walletData.map(wallet => (  
                     <>
                       <Text>{wallet}</Text>
+                      
                     
                     </>
                   ))}
