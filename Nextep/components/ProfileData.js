@@ -149,6 +149,8 @@ export default class DataProfileView extends Component {
                 <TextInput editable={false} defaultValue={data.email} style={styles.input} />
 
                 <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
+        
+                <Text>Vous avez voté  {data.votes.length} fois</Text>
 
                 <Text>Wallet_address</Text>
                 <View style={styles.wallet}>
@@ -185,7 +187,7 @@ export default class DataProfileView extends Component {
                   style={styles.submit}
                   onPress={this.onPressCancel.bind(this)}
                   >
-                    <Text style={styles.submitText}>Annulé</Text>
+                    <Text style={styles.submitText}>Annuler</Text>
                   </TouchableHighlight>
       
                   <TouchableHighlight
