@@ -165,6 +165,12 @@ export default class DataProfileView extends Component {
                 <Text>Email</Text>
                 <TextInput editable={false} defaultValue={data.email} style={styles.input} />
 
+                <TouchableHighlight 
+                  style={styles.submitFull}
+                  onPress={() => this.props.nav.navigate("ScanQr")}>
+                  <Text style={styles.submitText}>Modifier mot de passe</Text>
+                </TouchableHighlight>
+
                 <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
         
                 <Text>Vous avez voté  {data.votes.length} fois</Text>
@@ -244,6 +250,19 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 30,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: 'blue',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },  
+  submitFull: {
+    width: (Dimensions.get('window').width / 1.5) - 2,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 15,
+    marginTop: 15,
     paddingTop: 12,
     paddingBottom: 12,
     backgroundColor: 'blue',
