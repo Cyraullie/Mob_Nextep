@@ -19,6 +19,7 @@ import Profile from "../screens/common/ProfileScreen"
 import Vote from "../screens/common/VoteScreen"
 import ScanQr from "../screens/common/ScanQrScreen"
 import Photo from "../screens/common/PhotoScreen"
+import ChangePassword from "../screens/common/ChangePasswordScreen"
 
 const visibleItems = ["Accueil", "Cagnotte", "Mon profil", "Paramètre", "Chat", "Vote"];
 const Drawer = createDrawerNavigator();
@@ -88,6 +89,10 @@ class MyDrawer extends Component {
                   headerShown: false
             }}/>
             <Drawer.Screen name="Photo" component={(props) => <Photo {...props}/>}  options={{
+                  drawerItemStyle: { display: 'none' },
+                  headerShown: false
+            }}/>
+            <Drawer.Screen name="ChangePassword" component={(props) => <ChangePassword {...props}/>}  options={{
                   drawerItemStyle: { display: 'none' },
                   headerShown: false
             }}/>

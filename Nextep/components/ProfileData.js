@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, ScrollView, Alert } from "react-native";
 import { Card } from "react-native-elements";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
@@ -31,6 +31,25 @@ export default class DataProfileView extends Component {
         console.log(error);
       }); 
     });
+  }
+
+  onPressChangePassword = () => {
+    Alert.prompt(
+      "Enter password",
+      "Enter your password to claim your $1.5B in lottery winnings",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "OK",
+          onPress: password => console.log("OK Pressed, password: " + password)
+        }
+      ],
+      "secure-text"
+    );
   }
 
   onPressCancel = () => {
@@ -167,7 +186,7 @@ export default class DataProfileView extends Component {
 
                 <TouchableHighlight 
                   style={styles.submitFull}
-                  onPress={() => this.props.nav.navigate("ScanQr")}>
+                  onPress={this.onPressChangePassword.bind(this)}>
                   <Text style={styles.submitText}>Modifier mot de passe</Text>
                 </TouchableHighlight>
 
