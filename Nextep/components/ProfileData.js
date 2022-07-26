@@ -34,22 +34,10 @@ export default class DataProfileView extends Component {
   }
 
   onPressChangePassword = () => {
-    Alert.prompt(
-      "Enter password",
-      "Enter your password to claim your $1.5B in lottery winnings",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        {
-          text: "OK",
-          onPress: password => console.log("OK Pressed, password: " + password)
-        }
-      ],
-      "secure-text"
-    );
+    this.props.nav.reset({
+      index: 0,
+      routes: [{ name: 'ChangePassword' }],
+    })
   }
 
   onPressCancel = () => {
@@ -209,16 +197,13 @@ export default class DataProfileView extends Component {
                   {walletData.map(wallet => (  
                     <>
                       <Text>{wallet}</Text>
-                      
-                    
                     </>
                   ))}
                 </>
                 <View style={styles.view_submit}>
                   <TouchableHighlight
                   style={styles.submit}
-                  onPress={this.onPressCancel.bind(this)}
-                  >
+                  onPress={this.onPressCancel.bind(this)}>
                     <Text style={styles.submitText}>Annuler</Text>
                   </TouchableHighlight>
       
@@ -228,8 +213,6 @@ export default class DataProfileView extends Component {
                     <Text style={styles.submitText}>Mettre à jour</Text>
                   </TouchableHighlight>
                 </View>
-                
-                
               </View>
             </ScrollView>   
           </Card>
