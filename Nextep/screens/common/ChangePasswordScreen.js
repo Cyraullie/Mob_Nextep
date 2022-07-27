@@ -74,6 +74,13 @@ export default class ChangePasswordView extends Component {
                   duration: 6000
                 });
                 break;
+              case 405: 
+                showMessage({
+                  message: "Vous ne pouvez pas utiliser mettre le même mot de passe que l'ancien.",
+                  type: "danger",
+                  duration: 6000
+                });
+                break;
             }
 
         };
