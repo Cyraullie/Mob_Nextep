@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, ScrollView, Alert } from "react-native";
 import { Card } from "react-native-elements";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
@@ -14,25 +14,42 @@ let contract_address = "0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3"
 export default class DataProfileView extends Component {
   constructor(props) {
     super(props);
+    
+    this.state = { profile: "", profileData: [], walletData: [], _method: "PATCH", data: {}}
+  }
+
+  getData = () => {
     SecureStore.getItemAsync("user_token").then(
       (token) => {
         this.setState({ userToken: token });
         const axiosConfig = {headers: { Authorization: "Bearer " + token}};
         axios.get(BASE_URL + "profile", axiosConfig)
-        .then(response => {
-          this.setState({data: response.data});
+        .then((response) => {
+          this.getProfileData(response.data) 
         })
       .catch(error => {
         console.log(error);
       }); 
     });
-    
-  this.state = { profile: "", profileData: [], _method: "PATCH", data: {}}
   }
 
+  onPressChangePassword = () => {
+    this.props.nav.reset({
+      index: 0,
+      routes: [{ name: 'ChangePassword' }],
+    })
+  }
+
+  onPressCancel = () => {
+    this.props.nav.reset({
+      index: 0,
+      routes: [{ name: 'Mon profil' }],
+    })
+  }
+ 
   onPressUpdate = () => {
-    let { _method, username, email, firstname, lastname, wallet_address } = this.state;
-    let payload = { _method, username, email, firstname, lastname, wallet_address };
+    let { _method, username, email, firstname, lastname, wallet_address, description } = this.state;
+    let payload = { _method, username, email, firstname, lastname, wallet_address, description };
 
     const axiosConfig = {headers: { 
       "Access-Control-Allow-Origin": "*", 
@@ -65,6 +82,10 @@ export default class DataProfileView extends Component {
     }
   };
 
+  onDescriptionChange = (description) => {
+    this.setState({ description: description });
+};
+
   onUsernameChange = (username) => {
       this.setState({ username: username });
   };
@@ -81,95 +102,129 @@ export default class DataProfileView extends Component {
     this.setState({ wallet_address: wallet_address });
   };  
 
-  getProfileData() {
-    this.setState({ username: this.state.data.username, email: this.state.data.email, firstname: this.state.data.firstname, lastname: this.state.data.lastname,  wallet_address: "" })
+
+  getProfileData(data){
+    this.setState({ username: data.username, description: data.description, email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: "", description: data.description})
     SecureStore.getItemAsync("qr_scan").then(
-      (address) => {
+      async (address) => {
         if(address !== null){
           this.setState({ wallet_address: address })
           SecureStore.deleteItemAsync("qr_scan")
         }else {
-          this.setState({wallet_address: this.state.data.wallet_address});
+          this.setState({ wallet_address: data.wallet_address });
         }
-      
-      APIKit.getContractName(contract_address).then((contract_res)=>{
-        APIKit.getTokenQuantity(contract_address, this.state.data.wallet_address).then((quantity_res)=>{
-          let contract_name = contract_res.data.result[0].ContractName;
-          let quantity = quantity_res.data.result / 1000000000000000000
-          Moment.locale("fr");
-          const profileShift = (
-              <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
-              <ScrollView >
-                <View style={styles.cardTitle}>
-                  <Text style={styles.textTitle}>{this.state.data.username} </Text>
-                </View>
+    
+        const walletArr = data.address_wallets
+        const walletData = []
 
-                <View>
-                  <TouchableHighlight 
-                    style={styles.logo}
-                    onPress={() => this.props.nav.navigate("Photo")}>
-                    <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+this.state.data.picture}} />
-                  </TouchableHighlight>
+        for(let i = 0; i < walletArr.length; i++){
+          let quantitie = await APIKit.getTokenQuantity(contract_address, walletArr[i].address)
+          console.log(walletArr[i])
+          console.log(BASE_URL + "profile/wallet/" + walletArr[i].id)
+          walletData.push(
+            <>
+            <Text>{walletArr[i].address} : {"\n"} {quantitie.data.result / 1000000000000000000} Nextep</Text>
+            <TouchableHighlight 
+                onPress={() => axios.delete(BASE_URL + "profile/wallet/" + walletArr[i].id, {headers: { 
+                  "Access-Control-Allow-Origin": "*", 
+                  "Access-Control-Allow-Headers": "Content-Type",
+                  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                  Authorization: "Bearer " + this.state.userToken}
+                }).then(this.props.nav.reset({
+                  index: 0,
+                  routes: [{ name: 'Mon profil'}], 
+              }))}>
+              <Image style={styles.littleButton} source={require("../assets/trash.png") } />
+            </TouchableHighlight>
+            </>
+            
+          )
+        }
 
-                  <Text>Prénom</Text>
-                  <TextInput defaultValue={this.state.data.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
+        Moment.locale("fr");
+        
+        const profileShift = (
+          <Card style={styles.cardContainer} containerStyle={styles.dayFont}>
+            <ScrollView >
+              <View style={styles.cardTitle}>
+                <Text style={styles.textTitle}>{data.username} </Text>
+              </View>
 
-                  <Text>Nom</Text>
-                  <TextInput defaultValue={this.state.data.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
-                  
-                  <Text>Pseudo</Text>
-                  <TextInput defaultValue={this.state.data.username} style={styles.input} onChangeText={this.onUsernameChange}/>
+              <View>
+                <TouchableHighlight 
+                  style={styles.logo}
+                  onPress={() => this.props.nav.navigate("Photo")}>
+                  <Image style={styles.logo} source={{uri: {IMG_URL}.IMG_URL+data.picture}} />
+                </TouchableHighlight>
 
-                  <Text>Email</Text>
-                  <TextInput editable={false} defaultValue={this.state.data.email} style={styles.input} />
+                <Text>Description</Text>
+                <TextInput multiline={true} defaultValue={data.description} style={styles.inputArea} onChangeText={this.onDescriptionChange}></TextInput>
 
-                  <Text>Wallet_address</Text>
-                  <View style={styles.wallet}>
-                    <TextInput defaultValue={this.state.data.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
-                    <TouchableHighlight 
-                        onPress={() => axios.delete(BASE_URL + "profile/wallet", {headers: { 
-                          "Access-Control-Allow-Origin": "*", 
-                          "Access-Control-Allow-Headers": "Content-Type",
-                          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                          Authorization: "Bearer " + this.state.userToken}
-                        }).then(this.props.nav.reset({
-                          index: 0,
-                          routes: [{ name: 'Mon profil'}], 
-                      }))}>
-                      <Image style={styles.littleButton} source={require("../assets/trash.png") } />
-                    </TouchableHighlight>
-                    <TouchableHighlight 
-                        onPress={() => this.props.nav.navigate("ScanQr")}>
-                      <Image style={styles.littleButton} source={require("../assets/camera.png") } />
-                    </TouchableHighlight>
-                  </View>
-                  <TouchableHighlight
-                      style={styles.submit}
-                      onPress={this.onPressUpdate.bind(this)}
-                      >
-                        <Text style={styles.submitText}>Mettre à jour</Text>
-                    </TouchableHighlight>
+                <Text>Prénom</Text>
+                <TextInput defaultValue={data.firstname} style={styles.input} onChangeText={this.onFirstnameChange}/>
 
-                  <Text>Création du compte : {Moment(this.state.data.created_at).format("DD MMM Y")}</Text>
-                  <Text>Tokens :</Text>
+                <Text>Nom</Text>
+                <TextInput defaultValue={data.lastname} style={styles.input} onChangeText={this.onLastnameChange}/>
                 
-                  <Text>mettre un component pour afficher les nexteps de tous les wallet</Text>
-                  <Text>{quantity} {contract_name} </Text>
+                <Text>Pseudo</Text>
+                <TextInput defaultValue={data.username} style={styles.input} onChangeText={this.onUsernameChange}/>
+
+                <Text>Email</Text>
+                <TextInput editable={false} defaultValue={data.email} style={styles.input} />
+
+                <TouchableHighlight 
+                  style={styles.submitFull}
+                  onPress={this.onPressChangePassword.bind(this)}>
+                  <Text style={styles.submitText}>Modifier mot de passe</Text>
+                </TouchableHighlight>
+
+                <Text>Création du compte : {Moment(data.created_at).format("DD MMM Y")}</Text>
+        
+                <Text>Vous avez voté  {data.votes.length} fois</Text>
+
+                <Text>Wallet_address</Text>
+                <View style={styles.wallet}>
+                  <TextInput defaultValue={this.state.wallet_address} style={styles.wallet_input} onChangeText={this.onWalletAddressChange}/>
                   
+                  <TouchableHighlight 
+                      onPress={() => this.props.nav.navigate("ScanQr")}>
+                    <Image style={styles.littleButton} source={require("../assets/camera.png") } />
+                  </TouchableHighlight>
+                
+                
                 </View>
-            </ScrollView>
-              </Card>
+                <>
+                  {walletData.map(wallet => (  
+                    <>
+                      <Text>{wallet}</Text>
+                    </>
+                  ))}
+                </>
+                <View style={styles.view_submit}>
+                  <TouchableHighlight
+                  style={styles.submit}
+                  onPress={this.onPressCancel.bind(this)}>
+                    <Text style={styles.submitText}>Annuler</Text>
+                  </TouchableHighlight>
+      
+                  <TouchableHighlight
+                  style={styles.submit}
+                  onPress={this.onPressUpdate.bind(this)}>
+                    <Text style={styles.submitText}>Mettre à jour</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </ScrollView>   
+          </Card>
           );
           this.setState({
               profileData: profileShift,
           })
         })
-      })   
-    })
   }
   
   componentDidMount() {
-    this.getProfileData()  
+    this.getData()
   }
 
   render() {
@@ -193,10 +248,23 @@ const styles = StyleSheet.create({
     width: 50
   },  
   submit: {
-    width: 275,
+    width: (Dimensions.get('window').width / 2.5) - 2,
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 30,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: 'blue',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },  
+  submitFull: {
+    width: (Dimensions.get('window').width / 1.5) - 2,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 15,
+    marginTop: 15,
     paddingTop: 12,
     paddingBottom: 12,
     backgroundColor: 'blue',
@@ -218,6 +286,16 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 5,
     height: 30,
+  },
+  inputArea: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+    height: 100,
+    paddingTop: 5,
   },
   iconButton: {
     height: 40,
@@ -249,6 +327,11 @@ const styles = StyleSheet.create({
   wallet: {
     width: "100%",
     flexDirection: "row",
+  },
+  view_submit: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   wallet_input: {
     backgroundColor: "#FFFFFF",
