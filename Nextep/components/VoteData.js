@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, ScrollView, Alert } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, DevSettings } from "react-native";
 import { Card } from "react-native-elements";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
@@ -18,18 +18,20 @@ export default class DataVoteView extends Component {
     SecureStore.getItemAsync("user_token").then(
       (token) => {
         this.setState({ userToken: token });
-        const axiosConfig = {headers: { Authorization: "Bearer " + token}};
+        let axiosConfig = {headers: { Authorization: "Bearer " + token}};
         axios.get(BASE_URL + "voting_topics", axiosConfig)
         .then((response) => {
           this.getVotingData(response.data) 
         })
-      .catch(error => {
-        console.log(error);
-      }); 
-    });
+        .catch(error => {
+          console.log(error);
+        }); 
+      });
   }
 
-
+  onPressDownVote = () =>{
+    console.log("down")
+  }
   
   getVotingData(data){
     const votingArr = data
@@ -43,10 +45,36 @@ export default class DataVoteView extends Component {
                 <Text style={styles.cardTitle}>{votingArr[i].subject}</Text>
                 <Text>{votingArr[i].description}</Text>
                 <View style={styles.votingButton}>
-                    <TouchableHighlight style={[styles.button, styles.check]} >
+                    <TouchableHighlight style={[styles.button, styles.check]} onPress={() => {
+                      let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                      let payload = {vote: 1}
+                      axios.post(BASE_URL + "vote/" + votingArr[i].id,  payload, axiosConfig)
+                        .then((response) => {
+                          this.props.nav.reset({
+                            index: 0,
+                            routes: [{ name: 'Vote' }],
+                          })
+                        })
+                      .catch(error => {
+                        console.log(error && error.response);
+                      }); 
+                    }}>
                         <Image style={styles.iconButton} source={require("../assets/check.png") } />
                     </TouchableHighlight>
-                    <TouchableHighlight style={[styles.button, styles.cross]} >
+                    <TouchableHighlight style={[styles.button, styles.cross]} onPress={() => {
+                      let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                      let payload = {vote: 0}
+                      axios.post(BASE_URL + "vote/" + votingArr[i].id,  payload, axiosConfig)
+                        .then((response) => {
+                          this.props.nav.reset({
+                            index: 0,
+                            routes: [{ name: 'Vote' }],
+                          })
+                        })
+                      .catch(error => {
+                        console.log(error && error.response);
+                      }); 
+                    }}>
                         <Image style={styles.iconButton} source={require("../assets/cross.png") } />
                     </TouchableHighlight>
                 </View>
