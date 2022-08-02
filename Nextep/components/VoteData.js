@@ -6,6 +6,8 @@ import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 import { IMG_URL, BASE_URL } from "@env"
 import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
+import { ProgressBar } from "rn-multi-progress-bar";
+
 
 export default class DataVoteView extends Component {
   constructor(props) {
@@ -39,45 +41,60 @@ export default class DataVoteView extends Component {
     const topicData = []
 
     for(let i = 0; i < topicArr.length; i++){
-      console.log(topicArr[i].vote.length)
+      console.log(topicArr[i])
       topicData.push(
         <>
             <Card style={styles.cardContainer} containerStyle={styles.cardFont}>
                 <Text style={styles.cardTitle}>{topicArr[i].vote.length == 0 ? topicArr[i].subject : "Merci d'avoir voté"}</Text>
-                <Text>{topicArr[i].description}</Text>
+                <Text>{topicArr[i].vote.length == 0 ? topicArr[i].description : ""}</Text>
                 <View style={styles.votingButton}>
-                    <TouchableHighlight style={[styles.button, styles.check]} onPress={() => {
-                      let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
-                      let payload = {vote: 1}
-                      axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
-                        .then((response) => {
-                          this.props.nav.reset({
-                            index: 0,
-                            routes: [{ name: 'Vote' }],
+                  {
+                    topicArr[i].vote.length == 0 ? 
+                    <>
+                      <TouchableHighlight style={[styles.button, styles.check]} onPress={() => {
+                        let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                        let payload = {vote: 1}
+                        axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
+                          .then((response) => {
+                            this.props.nav.reset({
+                              index: 0,
+                              routes: [{ name: 'Vote' }],
+                            })
                           })
-                        })
-                      .catch(error => {
-                        console.log(error && error.response);
-                      }); 
-                    }}>
-                        <Image style={styles.iconButton} source={require("../assets/check.png") } />
-                    </TouchableHighlight>
-                    <TouchableHighlight style={[styles.button, styles.cross]} onPress={() => {
-                      let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
-                      let payload = {vote: 0}
-                      axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
-                        .then((response) => {
-                          this.props.nav.reset({
-                            index: 0,
-                            routes: [{ name: 'Vote' }],
+                        .catch(error => {
+                          console.log(error && error.response);
+                        }); 
+                      }}>
+                          <Image style={styles.iconButton} source={require("../assets/check.png") } />
+                      </TouchableHighlight>
+                      <TouchableHighlight style={[styles.button, styles.cross]} onPress={() => {
+                        let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                        let payload = {vote: 0}
+                        axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
+                          .then((response) => {
+                            this.props.nav.reset({
+                              index: 0,
+                              routes: [{ name: 'Vote' }],
+                            })
                           })
-                        })
-                      .catch(error => {
-                        console.log(error && error.response);
-                      }); 
-                    }}>
-                        <Image style={styles.iconButton} source={require("../assets/cross.png") } />
-                    </TouchableHighlight>
+                        .catch(error => {
+                          console.log(error && error.response);
+                        }); 
+                      }}>
+                          <Image style={styles.iconButton} source={require("../assets/cross.png") } />
+                      </TouchableHighlight>
+                    </> : 
+                    
+                    <ProgressBar
+                      shouldAnimate={true}
+                      animateDuration={500} 
+                      data={[
+                        { progress: topicArr[i].up_vote, color: "rgb(55, 106, 255)" },
+                        { progress: topicArr[i].down_vote, color: "rgb(220,20,60)" },
+                      ]}
+                    />
+                }
+                    
                 </View>
             </Card>
         </>
