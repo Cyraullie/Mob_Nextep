@@ -21,7 +21,7 @@ export default class DataVoteView extends Component {
         let axiosConfig = {headers: { Authorization: "Bearer " + token}};
         axios.get(BASE_URL + "voting_topics", axiosConfig)
         .then((response) => {
-          this.getVotingData(response.data) 
+          this.getTopicData(response.data) 
         })
         .catch(error => {
           console.log(error);
@@ -32,23 +32,24 @@ export default class DataVoteView extends Component {
   onPressDownVote = () =>{
     console.log("down")
   }
-  
-  getVotingData(data){
-    const votingArr = data
-    const votingData = []
 
-    for(let i = 0; i < votingArr.length; i++){
-        console.log(votingArr[i])
-        votingData.push(
+  getTopicData(data){
+    //console.log(data)
+    const topicArr = data
+    const topicData = []
+
+    for(let i = 0; i < topicArr.length; i++){
+      console.log(topicArr[i].vote.length)
+      topicData.push(
         <>
             <Card style={styles.cardContainer} containerStyle={styles.cardFont}>
-                <Text style={styles.cardTitle}>{votingArr[i].subject}</Text>
-                <Text>{votingArr[i].description}</Text>
+                <Text style={styles.cardTitle}>{topicArr[i].vote.length == 0 ? topicArr[i].subject : "Merci d'avoir voté"}</Text>
+                <Text>{topicArr[i].description}</Text>
                 <View style={styles.votingButton}>
                     <TouchableHighlight style={[styles.button, styles.check]} onPress={() => {
                       let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
                       let payload = {vote: 1}
-                      axios.post(BASE_URL + "vote/" + votingArr[i].id,  payload, axiosConfig)
+                      axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
                         .then((response) => {
                           this.props.nav.reset({
                             index: 0,
@@ -64,7 +65,7 @@ export default class DataVoteView extends Component {
                     <TouchableHighlight style={[styles.button, styles.cross]} onPress={() => {
                       let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
                       let payload = {vote: 0}
-                      axios.post(BASE_URL + "vote/" + votingArr[i].id,  payload, axiosConfig)
+                      axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
                         .then((response) => {
                           this.props.nav.reset({
                             index: 0,
@@ -81,14 +82,14 @@ export default class DataVoteView extends Component {
             </Card>
         </>
         
-        )
+      )
     }
 
     Moment.locale("fr");
     
     const votingShift = (
         <>
-            {votingData.map(voting_list => (  
+            {topicData.map(voting_list => (  
             <>
                 {voting_list}
             </>
