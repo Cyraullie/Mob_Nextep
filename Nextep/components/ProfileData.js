@@ -84,7 +84,7 @@ export default class DataProfileView extends Component {
 
   onDescriptionChange = (description) => {
     this.setState({ description: description });
-};
+  };
 
   onUsernameChange = (username) => {
       this.setState({ username: username });

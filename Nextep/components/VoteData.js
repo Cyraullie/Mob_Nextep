@@ -13,7 +13,7 @@ export default class DataVoteView extends Component {
   constructor(props) {
     super(props);
     
-    this.state = { voteData: []}
+    this.state = { voteData: [], subject: "", description: ""}
   }
 
   getData = () => {
@@ -23,7 +23,10 @@ export default class DataVoteView extends Component {
         let axiosConfig = {headers: { Authorization: "Bearer " + token}};
         axios.get(BASE_URL + "voting_topics", axiosConfig)
         .then((response) => {
-          this.getTopicData(response.data) 
+          axios.get(BASE_URL + "role", axiosConfig)
+          .then((role) => {
+            this.getTopicData(response.data, role.data) 
+          })
         })
         .catch(error => {
           console.log(error);
@@ -31,14 +34,66 @@ export default class DataVoteView extends Component {
       });
   }
 
+  onSubjectChange = (subject) => {
+    this.setState({ subject: subject });
+  };  
+
+  onDescriptionChange = (description) => {
+    this.setState({ description: description });
+  };
+
+  onPressAddTopic = () => {
+    let { subject, description } = this.state;
+    let payload = { subject, description };
+
+    const axiosConfig = {headers: { 
+      "Access-Control-Allow-Origin": "*", 
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      Authorization: "Bearer " + this.state.userToken}
+    };
+
+    const onSuccess = (te) => {
+        
+      this.props.nav.reset({
+        index: 0,
+        routes: [{ name: 'Vote' }],
+      })
+    };
+
+    const onFailure = (error) => {
+        console.log(error && error.response);
+    };
+    axios.post(BASE_URL + "vote", payload, axiosConfig).then(onSuccess).catch(onFailure)
+  }
+
   onPressDownVote = () =>{
     console.log("down")
   }
 
-  getTopicData(data){
+  getTopicData(data, role){
     //console.log(data)
     const topicArr = data
     const topicData = []
+
+    console.log(role.slug)
+    if(role.slug == "ADM") {
+      topicData.push(
+        <>
+          <Text>Sujet</Text>
+          <TextInput style={styles.input}  onChangeText={this.onSubjectChange}></TextInput>
+
+          <Text>Description</Text>
+          <TextInput style={styles.inputArea}  onChangeText={this.onDescriptionChange}></TextInput>
+
+          <TouchableHighlight
+          style={styles.submit} 
+          onPress={this.onPressAddTopic.bind(this)}>
+            <Text style={styles.submitText}>Ajouter</Text>
+          </TouchableHighlight>
+        </>
+      )
+    }
 
     for(let i = 0; i < topicArr.length; i++){
       console.log(topicArr[i])
@@ -139,12 +194,28 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 15,
   },
+  inputArea: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+    height: 100,
+    paddingTop: 5,
+  },
   votingButton: {
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 10
   },
 
+  submitText: {
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
 
   cardFont: {
     backgroundColor: "#0693e3",
@@ -163,6 +234,29 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 10
   },
+  submit: {
+    width: (Dimensions.get('window').width / 2.5) - 2,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 30,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: 'blue',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+  }, 
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 5,
+    height: 30,
+  },
+
+
   check: {
     backgroundColor: "#16cd00",
   },
