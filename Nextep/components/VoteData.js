@@ -53,8 +53,7 @@ export default class DataVoteView extends Component {
       Authorization: "Bearer " + this.state.userToken}
     };
 
-    const onSuccess = (te) => {
-        
+    const onSuccess = () => {
       this.props.nav.reset({
         index: 0,
         routes: [{ name: 'Vote' }],
@@ -72,11 +71,9 @@ export default class DataVoteView extends Component {
   }
 
   getTopicData(data, role){
-    //console.log(data)
     const topicArr = data
     const topicData = []
 
-    console.log(role.slug)
     if(role.slug == "ADM") {
       topicData.push(
         <>
@@ -96,7 +93,6 @@ export default class DataVoteView extends Component {
     }
 
     for(let i = 0; i < topicArr.length; i++){
-      console.log(topicArr[i])
       topicData.push(
         <>
             <Card style={styles.cardContainer} containerStyle={styles.cardFont}>
