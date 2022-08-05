@@ -135,15 +135,21 @@ export default class DataVoteView extends Component {
                           <Image style={styles.iconButton} source={require("../assets/cross.png") } />
                       </TouchableHighlight>
                     </> : 
+                    <View style={styles.progressArea}>
+                      <View style={styles.progressDataArea}>
+                        <Text>Oui : {topicArr[i].up_vote}</Text>
+                        <Text style={styles.progressDataRight}>Non : {topicArr[i].down_vote}</Text>
+                      </View>
+                      <ProgressBar
+                        shouldAnimate={true}
+                        animateDuration={500} 
+                        data={[
+                          { progress: topicArr[i].up_vote, color: "rgb(55, 106, 255)" },
+                          { progress: topicArr[i].down_vote, color: "rgb(220,20,60)" },
+                        ]}
+                      />
+                    </View>
                     
-                    <ProgressBar
-                      shouldAnimate={true}
-                      animateDuration={500} 
-                      data={[
-                        { progress: topicArr[i].up_vote, color: "rgb(55, 106, 255)" },
-                        { progress: topicArr[i].down_vote, color: "rgb(220,20,60)" },
-                      ]}
-                    />
                 }
                     
                 </View>
@@ -205,12 +211,24 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 10
   },
+  progressArea: {
+    flexDirection: "column",
+    width: "100%"
+  },
+  progressDataArea: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between"
+  },
 
   submitText: {
     color: "#FFFFFF",
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
+  },
+  progressDataRight: {
+    justifyContent: "flex-end"
   },
 
   cardFont: {
