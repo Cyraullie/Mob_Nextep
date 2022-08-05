@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, DevSettings } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, Alert } from "react-native";
 import { Card } from "react-native-elements";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
@@ -13,9 +13,9 @@ export default class DataVoteView extends Component {
   constructor(props) {
     super(props);
     
-    this.state = { voteData: [], subject: "", description: ""}
+    this.state = { voteData: [], subject: "", description: "", isEnabled: false}
   }
-
+  
   getData = () => {
     SecureStore.getItemAsync("user_token").then(
       (token) => {
@@ -77,11 +77,11 @@ export default class DataVoteView extends Component {
     if(role.slug == "ADM") {
       topicData.push(
         <>
-          <Text>Sujet</Text>
+          <Text style={styles.title}>Sujet</Text>
           <TextInput style={styles.input}  onChangeText={this.onSubjectChange}></TextInput>
 
-          <Text>Description</Text>
-          <TextInput style={styles.inputArea}  onChangeText={this.onDescriptionChange}></TextInput>
+          <Text style={styles.title}>Description</Text>
+          <TextInput multiline={true} style={styles.inputArea}  onChangeText={this.onDescriptionChange}></TextInput>
 
           <TouchableHighlight
           style={styles.submit} 
@@ -96,7 +96,31 @@ export default class DataVoteView extends Component {
       topicData.push(
         <>
             <Card style={styles.cardContainer} containerStyle={styles.cardFont}>
+              <View style={styles.cardTitleArea}>
                 <Text style={styles.cardTitle}>{topicArr[i].vote.length == 0 ? topicArr[i].subject : "Merci d'avoir voté"}</Text>
+                {
+                 //role.slug == "ADM" ? 
+                  <>
+                  <TouchableHighlight style={styles.disableButton} onPress={() => {
+                    //console.log(this.state.userToken)
+                        axios.post(BASE_URL + "topic/" + topicArr[i].id, [ {headers: { Authorization: "Bearer " + this.state.userToken}}])
+                          .then((response) => {
+                            this.props.nav.reset({
+                              index: 0,
+                              routes: [{ name: 'Vote' }],
+                            })
+                          })
+                        .catch(error => {
+                          console.log(error.response.request._response);
+                        }); 
+                      }}>
+                        <Text>Désactiver</Text>
+                  </TouchableHighlight>
+                  </>
+                  
+                }
+                
+              </View>
                 <Text>{topicArr[i].vote.length == 0 ? topicArr[i].description : ""}</Text>
                 <View style={styles.votingButton}>
                   {
@@ -220,6 +244,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between"
   },
+  cardTitleArea: {
+    flexDirection: "row"
+  },
 
   submitText: {
     color: "#FFFFFF",
@@ -229,6 +256,11 @@ const styles = StyleSheet.create({
   },
   progressDataRight: {
     justifyContent: "flex-end"
+  },
+  title: {
+    marginLeft: 20,
+    marginBottom: 5,
+    marginTop: 10
   },
 
   cardFont: {
@@ -248,11 +280,17 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 10
   },
+  disableButton: {
+    height:40,
+    width: 90,
+    padding: 10,
+    backgroundColor: "#cd0000",
+  },
   submit: {
-    width: (Dimensions.get('window').width / 2.5) - 2,
+    width: 150,
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: 30,
+    marginTop: 5,
     paddingTop: 12,
     paddingBottom: 12,
     backgroundColor: 'blue',
