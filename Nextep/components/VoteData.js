@@ -66,10 +66,6 @@ export default class DataVoteView extends Component {
     axios.post(BASE_URL + "vote", payload, axiosConfig).then(onSuccess).catch(onFailure)
   }
 
-  onPressDownVote = () =>{
-    console.log("down")
-  }
-
   getTopicData(data, role){
     const topicArr = data
     const topicData = []
