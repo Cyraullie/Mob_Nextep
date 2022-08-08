@@ -99,11 +99,12 @@ export default class DataVoteView extends Component {
               <View style={styles.cardTitleArea}>
                 <Text style={styles.cardTitle}>{topicArr[i].vote.length == 0 ? topicArr[i].subject : "Merci d'avoir voté"}</Text>
                 {
-                 //role.slug == "ADM" ? 
+                 role.slug == "ADM" ? 
                   <>
                   <TouchableHighlight style={styles.disableButton} onPress={() => {
-                    //console.log(this.state.userToken)
-                        axios.post(BASE_URL + "topic/" + topicArr[i].id, [ {headers: { Authorization: "Bearer " + this.state.userToken}}])
+                    let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                    let payload = {vote: 1}
+                        axios.post(BASE_URL + "topic/" + topicArr[i].id, payload, axiosConfig)
                           .then((response) => {
                             this.props.nav.reset({
                               index: 0,
@@ -117,7 +118,9 @@ export default class DataVoteView extends Component {
                         <Text>Désactiver</Text>
                   </TouchableHighlight>
                   </>
-                  
+                  :
+                  <>
+                  </>
                 }
                 
               </View>
