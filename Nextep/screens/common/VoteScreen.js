@@ -6,10 +6,12 @@ import {
   Text,
   TextInput,
   View,
+  ScrollView,
   Button,
   SafeAreaView,
 } from "react-native";
 
+import DataVotingView from "../../components/VoteData";
 
 export default class VoteScreen extends Component {
     constructor(props) {
@@ -19,13 +21,11 @@ export default class VoteScreen extends Component {
  
     render() {
         return (
-            <View style={styles.container}>
-
-              <SafeAreaView>
-                  
+            <View style={styles.container}>    
+              <ScrollView >    
                 <Text>Vote</Text>
-                  
-              </SafeAreaView>
+                <DataVotingView nav={this.props.navigation}/>
+              </ScrollView>          
             </View>
         );
     }
