@@ -1,18 +1,11 @@
 import React, { Component } from "react";
-import * as SecureStore from 'expo-secure-store';
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
   Text,
-  TextInput,
   View,
-  Button,
-  Dimensions,
 } from "react-native";
-import { TouchableHighlight } from "react-native-gesture-handler";
-
 import HomeTab from "../../components/HomeTab";
+import NextepPrice from "../../components/NextepPrice";
 
 class HomeScreen extends Component {
     constructor(props) {
@@ -25,8 +18,8 @@ class HomeScreen extends Component {
             <View style={styles.container}>
 
                   <Text>Home</Text>
-                  
 
+                  <NextepPrice />
 
                   <View style={styles.tabArea}>
 

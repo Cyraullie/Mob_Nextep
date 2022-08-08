@@ -15,6 +15,10 @@ class API {
     getContractName(contractaddress){
       return connectBscApi.get("api?module=contract&action=getsourcecode&address="+ contractaddress +"&apikey="+BSC_API_TOKEN)
     }
+
+    getNextepPrice(){
+      return axios.get("https://api.binance.com/api/v3/ticker/price?symbol=NEXTEP")
+    }
 }
 
 

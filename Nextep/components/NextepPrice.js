@@ -2,26 +2,25 @@ import React, { Component } from "react";
 import { StyleSheet, Text, Dimensions } from "react-native";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
-import axios from "axios";
-import { BASE_URL } from "@env"
 import { TouchableHighlight } from "react-native-gesture-handler";
+import axios from "axios";
+
+import APIKit from "./Api";
 
 
-export default class HomeTabView extends Component {
+export default class NextepView extends Component {
   constructor(props) {
     super(props);
     
-    this.state = { homeTabData: []}
+    this.state = { nextepData: []}
   }
   
   getData = () => {
     SecureStore.getItemAsync("user_token").then(
       (token) => {
-        this.setState({ userToken: token });
-        let axiosConfig = {headers: { Authorization: "Bearer " + token}};
-        axios.get(BASE_URL + "voting_topics", axiosConfig)
+        APIKit.getNextepPrice()
         .then((response) => {
-            this.getHomeTabData(response.data) 
+            this.getNextepData(response) 
         })
         .catch(error => {
           console.log(error);
@@ -30,41 +29,27 @@ export default class HomeTabView extends Component {
   }
 
   
-  getHomeTabData(data){
-    const topicArr = data
-    const tabShift = []
+  getNextepData(data){
+    console.log(data)
+    const nextepShift = []
 
-    tabShift.push(
-      <>
-        <TouchableHighlight style={styles.tab} disabled={false} onPress={() => {
-            this.props.nav.reset({
-                index: 0,
-                routes: [{ name: 'Chat' }],
-            })
-            }}>
-            <Text style={styles.tabText}>Chat</Text>
-        </TouchableHighlight>
-
-        
-                    
-        <TouchableHighlight style={topicArr.length < 1 ? styles.tabDisabled : styles.tab} disabled={topicArr.length < 1} onPress={() => {
-        this.props.nav.reset({
-            index: 0,
-            routes: [{ name: 'Vote' }],
-        })
-        }}>
-            <Text style={styles.tabText}>{topicArr.length < 1 ? "Vote" : "Vote !"}</Text>
-        </TouchableHighlight>        
-
-      </>
-    
-    )
-    
+        nextepShift.push(
+            <>
+                <TouchableHighlight style={styles.tab} disabled={false} onPress={() => {
+                    this.props.nav.reset({
+                        index: 0,
+                        routes: [{ name: 'Chat' }],
+                    })
+                    }}>
+                    <Text style={styles.tabText}>Chat</Text>
+                </TouchableHighlight>
+            </>
+        )
 
     Moment.locale("fr");
     
     this.setState({
-        homeTabData: tabShift,
+        nextepData: nextepShift,
     })
         
   }
@@ -76,7 +61,7 @@ export default class HomeTabView extends Component {
   render() {
     return (
       <>
-        {this.state.homeTabData}
+        {this.state.nextepData}
       </>
     );
   }
