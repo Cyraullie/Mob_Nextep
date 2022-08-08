@@ -130,34 +130,74 @@ export default class DataVoteView extends Component {
                     topicArr[i].vote.length == 0 ? 
                     <>
                       <TouchableHighlight style={[styles.button, styles.check]} onPress={() => {
-                        let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
-                        let payload = {vote: 1}
-                        axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
-                          .then((response) => {
-                            this.props.nav.reset({
-                              index: 0,
-                              routes: [{ name: 'Vote' }],
-                            })
-                          })
-                        .catch(error => {
-                          console.log(error && error.response);
-                        }); 
+                        Alert.alert(
+                          "Confirmation",
+                          "Confirmez-vous votre vote ?",
+                          [
+                            {
+                              text: "Annuler",
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "cancel"
+                            },
+                            { text: "Confirmer", onPress: () => {
+                              Alert.alert(
+                                "Confirmation",
+                                "Votre vote a bien été enregistré",
+                                [
+                                  { text: "Ok"}])
+
+                              let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                              let payload = {vote: 1}
+                              axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
+                                .then((response) => {
+                                  this.props.nav.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Accueil' }],
+                                  })
+                                })
+                              .catch(error => {
+                                console.log(error && error.response);
+                              }); 
+                            } }
+                          ]
+                        )
+                        
                       }}>
                           <Image style={styles.iconButton} source={require("../assets/check.png") } />
                       </TouchableHighlight>
                       <TouchableHighlight style={[styles.button, styles.cross]} onPress={() => {
-                        let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
-                        let payload = {vote: 0}
-                        axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
-                          .then((response) => {
-                            this.props.nav.reset({
-                              index: 0,
-                              routes: [{ name: 'Vote' }],
-                            })
-                          })
-                        .catch(error => {
-                          console.log(error && error.response);
-                        }); 
+                        Alert.alert(
+                          "Confirmation",
+                          "Confirmez-vous votre vote ?",
+                          [
+                            {
+                              text: "Annuler",
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "cancel"
+                            },
+                            { text: "Confirmer", onPress: () => {
+                              Alert.alert(
+                                "Confirmation",
+                                "Votre vote a bien été enregistré",
+                                [
+                                  { text: "Ok"}])
+
+                                let axiosConfig = {headers: { Authorization: "Bearer " + this.state.userToken}};
+                                let payload = {vote: 0}
+                                axios.post(BASE_URL + "vote/" + topicArr[i].id,  payload, axiosConfig)
+                                  .then((response) => {
+                                    this.props.nav.reset({
+                                      index: 0,
+                                      routes: [{ name: 'Accueil' }],
+                                    })
+                                  })
+                                .catch(error => {
+                                  console.log(error && error.response);
+                                });
+                                
+                              } }
+                            ]
+                          ) 
                       }}>
                           <Image style={styles.iconButton} source={require("../assets/cross.png") } />
                       </TouchableHighlight>
