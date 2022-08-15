@@ -7,9 +7,14 @@ import {
   TextInput,
   View,
   Button,
+  ScrollView,
   SafeAreaView,
 } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
+
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios";
+import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
 //import { showMessage } from "react-native-flash-message";
 //import { Picker } from "@react-native-picker/picker";
 
@@ -21,19 +26,19 @@ export default class RegisterScreen extends Component {
         (this.state = { username: "", surname: "", lastname: "", firstname: "", password: "", cpassword: "", mdpConfirmed: false});
     }
 
-    onUsernameChange = (username) => {
+    onUsernameChange = (email) => {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (reg.test(username) === false) {
-        this.setState({ username: username })
+      if (reg.test(email) === false) {
+        this.setState({ email: email })
         return false;
       }
       else {
-        this.setState({ username: username })
+        this.setState({ email: email })
       }
     };
 
-    onSurnameChange = (surname) => {
-        this.setState({ surname: surname });
+    onSurnameChange = (name) => {
+        this.setState({ name: name });
     };
     
     onLastnameChange = (lastname) => {
@@ -48,10 +53,10 @@ export default class RegisterScreen extends Component {
       this.setState({ password: password });
     };
 
-    onConfirmPasswordChange = (cpassword) => {
-      this.setState({ cpassword: cpassword})
+    onConfirmPasswordChange = (password_confirmation) => {
+      this.setState({ password_confirmation: password_confirmation})
       
-      if(this.state.password == cpassword){
+      if(this.state.password == password_confirmation){
         this.setState({ mdpConfirmed: true });
       }else{
         this.setState({ mdpConfirmed: false });
@@ -64,94 +69,96 @@ export default class RegisterScreen extends Component {
     }
 
     onPressRegister() {
-        /*const { username, password } = this.state;
-        const payload = { username, password };
-        console.log(this.props)
+        let { name, password, password_confirmation, email, lastname, firstname } = this.state;
+        let payload = { name, password, password_confirmation, email, lastname, firstname };
+    
+        console.log(payload)
         const onSuccess = ({ data }) => {
-            this.setState({ userToken: data });
-            localStorage.setItem("user_token", this.state.userToken);
+          this.setState({ userToken: data });
+            SecureStore.setItemAsync("user_token", this.state.userToken);
             this.props.auth(data);
         };
-      
+    
         const onFailure = (error) => {
             console.log(error && error.response);
         };
-
-        APIKit.getToken(payload).then(onSuccess).catch(onFailure);*/
-
+        axios.post(BASE_URL + "nxp_register", payload).then(onSuccess).catch(onFailure)
     };
  
     render() {
         return (
             <View style={styles.container}>
-                <ImageBackground source={image} style={styles.backgroud}>
-                    <SafeAreaView>
-                      <Image 
-                      style={styles.logo}
-                      source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
-                       />
+              <ScrollView >
+                  <ImageBackground source={image} style={styles.backgroud}>
+                      <SafeAreaView>
+                        <Image 
+                        style={styles.logo}
+                        source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
+                        />
 
-                        <Text style={styles.text}>Email</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Email"
-                            
-                            onChangeText={this.onUsernameChange}
-                        ></TextInput>
+                          <Text style={styles.text}>Email</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Email"
+                              
+                              onChangeText={this.onUsernameChange}
+                          ></TextInput>
 
-                        <Text style={styles.text}>Username</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Username"
-                            onChangeText={this.onSurnameChange}
-                        ></TextInput>
-                        
-                        <Text style={styles.text}>Nom</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Nom"
-                            onChangeText={this.onLastnameChange}
-                        ></TextInput>
-                        
-                        <Text style={styles.text}>Prénom</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Prénom"
-                            onChangeText={this.onFirstnameChange}
-                        ></TextInput>
+                          <Text style={styles.text}>Username</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Username"
+                              onChangeText={this.onSurnameChange}
+                          ></TextInput>
+                          
+                          <Text style={styles.text}>Nom</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Nom"
+                              onChangeText={this.onLastnameChange}
+                          ></TextInput>
+                          
+                          <Text style={styles.text}>Prénom</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Prénom"
+                              onChangeText={this.onFirstnameChange}
+                          ></TextInput>
 
-                        <Text style={styles.text}>Mot de passe</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mot de passe"
-                            secureTextEntry
-                            onChangeText={this.onPasswordChange}
-                        ></TextInput>
+                          <Text style={styles.text}>Mot de passe</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Mot de passe"
+                              secureTextEntry
+                              onChangeText={this.onPasswordChange}
+                          ></TextInput>
 
 
-                        <Text style={styles.text}>Confirmer le mot de passe</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mot de passe"
-                            secureTextEntry
-                            onChangeText={this.onConfirmPasswordChange}
-                        ></TextInput>
+                          <Text style={styles.text}>Confirmer le mot de passe</Text>
+                          <TextInput
+                              style={styles.input}
+                              placeholder="Mot de passe"
+                              secureTextEntry
+                              onChangeText={this.onConfirmPasswordChange}
+                          ></TextInput>
 
-                         <View>
-                            <TouchableHighlight
-                            style={styles.submit}
-                            onPress={this.onPressRegister.bind(this)}
-                            >
-                              <Text style={styles.submitText}>s'inscrire</Text>
-                              </TouchableHighlight>
+                          <View>
                               <TouchableHighlight
-                              onPress={this.onPressLogin.bind(this)}
+                              style={styles.submit}
+                              onPress={this.onPressRegister.bind(this)}
                               >
-                              <Text style={styles.submitText}>Retour à la connection</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </SafeAreaView>
-                </ImageBackground>
+                                <Text style={styles.submitText}>s'inscrire</Text>
+                                </TouchableHighlight>
+                              <TouchableHighlight
+                                style={styles.submitReturn}
+                                onPress={this.onPressLogin.bind(this)}
+                                >
+                                <Text style={styles.submitText}>Retour à la connection</Text>
+                              </TouchableHighlight>
+                          </View>
+                      </SafeAreaView>
+                  </ImageBackground>
+                </ScrollView>
             </View>
         );
     }
@@ -198,10 +205,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingTop: 12,
     paddingBottom: 12,
+    marginBottom: 10,
     backgroundColor: 'blue',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
+  },
+  submitReturn: {
+    width: 275,
+    marginLeft: 50,
+    marginTop: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 20,
   },
   submitText: {
     color: "#FFFFFF",

@@ -106,7 +106,7 @@ class MyDrawer extends Component {
           useLegacyImplementation
           >
             <Drawer.Screen name="Login" component={(props) => <Login {...props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
-            <Drawer.Screen name="Register" component={(props) => <Register {...props}/>} options={{ headerShown: false }}/>
+            <Drawer.Screen name="Register" component={(props) => <Register {...props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
           </Drawer.Navigator>
         </NavigationContainer>
 
