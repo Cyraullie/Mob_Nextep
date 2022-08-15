@@ -14,35 +14,29 @@ export default class NextepView extends Component {
     
     this.state = { nextepData: []}
   }
+
   
+
   getData = () => {
-    SecureStore.getItemAsync("user_token").then(
-      (token) => {
-        APIKit.getNextepPrice()
-        .then((response) => {
-            this.getNextepData(response) 
-        })
-        .catch(error => {
-          console.log(error);
-        }); 
-      });
+   /* console.log("test")
+    APIKit.getNextepPrice()
+    .then((response) => {
+      console.log(response)*/
+      this.getNextepData() 
+    /*})
+    .catch(error => {
+      console.log(error);
+    }); */
   }
 
   
-  getNextepData(data){
-    console.log(data)
+  getNextepData(){
+    //console.log(data)
     const nextepShift = []
 
         nextepShift.push(
             <>
-                <TouchableHighlight style={styles.tab} disabled={false} onPress={() => {
-                    this.props.nav.reset({
-                        index: 0,
-                        routes: [{ name: 'Chat' }],
-                    })
-                    }}>
-                    <Text style={styles.tabText}>Chat</Text>
-                </TouchableHighlight>
+              <Text>Nextep</Text>
             </>
         )
 

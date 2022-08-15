@@ -17,7 +17,20 @@ class API {
     }
 
     getNextepPrice(){
-      return axios.get("https://api.binance.com/api/v3/ticker/price?symbol=NEXTEP")
+
+      /*let ws = new WebSocket("wss://stream.binance.com:9443/ws/nextep@trade")
+
+      ws.onmessage = (event) => {
+        console.log(event.data)
+      }*/
+
+/*
+
+      var options = {muteHttpExceptions: true};
+      resBTCPrice = JSON.parse(fetch('https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT',options).getContentText()); 
+      return resBTCPrice.price;
+*/
+      return axios.get('https://api.coinmarketcap.com/v1/ticker/nextep/')
     }
 }
 
