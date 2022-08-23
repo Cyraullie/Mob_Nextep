@@ -15,62 +15,53 @@ import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
 
-export default class LoginScreen extends Component {
+export default class TfaScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", password: ""});
+        (this.state = { code: ""})
+        SecureStore.getItemAsync("user_token_temp").then(
+            (token) => { this.handleToken(token) });
+        this.handleToken = this.handleToken.bind(this);
     }
 
-    onUsernameChange = (username) => {
-      this.setState({ username: username });
+    handleToken(data) {
+        this.setState({ userToken: data });
+        const axiosConfig = {headers: { 
+            "Access-Control-Allow-Origin": "*", 
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            Authorization: "Bearer " + this.state.userToken}
+          };
+
+        axios.get(BASE_URL +'2fa', axiosConfig).then((code) => {
+            this.setState({ mail_code: code.data.substr(code.data.length - 6)});
+        }).catch((error) => { console.log(error && error.response); })
+      }
+
+    onCodeChange = (code) => {
+      this.setState({ code: code });
     };
     
-    onPasswordChange = (password) => {
-      this.setState({ password: password });
-    };
-
-    onPressRegister = () => {
-      this.props.navigation.navigate("Register")
-    }
-
-    onPressLogin() {
-        const { username, password } = this.state;
-        const payload = { username, password };
-        const onSuccess = ({ data }) => {
-            this.setState({ userToken: data });
-
-            const axiosConfig = {headers: { 
-              "Access-Control-Allow-Origin": "*", 
-              "Access-Control-Allow-Headers": "Content-Type",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-              Authorization: "Bearer " + this.state.userToken}
-            };
-
-            axios.get(BASE_URL +'2faEnabled', axiosConfig)
-            .then((data) => {
-              if(data.data){
-                SecureStore.setItemAsync("user_token_temp", this.state.userToken);
-                this.props.navigation.navigate("2fa")
-              }else {
-                SecureStore.setItemAsync("user_token", this.state.userToken);
-                this.props.auth(data);
-              }
-            })
-            .catch((error) => {
-              console.log(error && error.response);
-            })
+    onPressCheck() {
+        const { code, mail_code } = this.state;
+        const payload = { code, mail_code };
+        console.log(payload)
+        const onSuccess = () => {
+            SecureStore.setItemAsync("user_token", this.state.userToken);
+            SecureStore.deleteItemAsync("user_token_temp")
+            this.props.auth(this.state.userToken);
         };
       
         const onFailure = (error) => {
             console.log(error && error.response);
             showMessage({
-              message: "L'email ou le mot de passe est incorrect.",
+              message: "Le code entré n'est pas le bon.",
               type: "danger",
               duration: 6000
             });
         };
 
-        axios.post(BASE_URL +'mytoken', payload)
+        axios.post(BASE_URL +'2fa', payload)
         .then(onSuccess)
         .catch(onFailure);
 
@@ -86,30 +77,19 @@ export default class LoginScreen extends Component {
                       source={{uri: "https://nextepcrypto.com/wp-content/uploads/2022/01/NEXTEP-Crypto-Currency-logo-1.png"}}
                        />
 
-                        <Text style={styles.text}>Email</Text>
+                        <Text style={styles.text}>Code</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Email"
-                            onChangeText={this.onUsernameChange}
+                            placeholder="Code"
+                            onChangeText={this.onCodeChange}
+                            maxLength="6"
                         ></TextInput>
-                        <Text style={styles.text}>Mot de passe</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mot de passe"
-                            secureTextEntry
-                            onChangeText={this.onPasswordChange}
-                        ></TextInput>
-                          <TouchableHighlight
-                            onPress={this.onPressRegister.bind(this)}
-                            >
-                              <Text style={styles.submitText}>s'inscrire</Text>
-                            </TouchableHighlight>
-                         <View>
+                        <View>
                             <TouchableHighlight
                             style={styles.submit}
-                            onPress={this.onPressLogin.bind(this)}
+                            onPress={this.onPressCheck.bind(this)}
                             >
-                              <Text style={styles.submitText}>Se connecter</Text>
+                            <Text style={styles.submitText}>Se connecter</Text>
                             </TouchableHighlight>
                         </View>
                 </ImageBackground>
