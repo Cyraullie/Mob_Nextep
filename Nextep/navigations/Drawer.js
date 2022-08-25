@@ -7,6 +7,7 @@ import FlashMessage from "react-native-flash-message";
 //authentifical route
 import Login from "../screens/auth/LoginScreen"
 import Register from "../screens/auth/RegisterScreen"
+import Tfa from "../screens/auth/2faScreen"
 
 //connected route
 import Home from "../screens/common/HomeScreen"
@@ -107,6 +108,7 @@ class MyDrawer extends Component {
           >
             <Drawer.Screen name="Login" component={(props) => <Login {...props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
             <Drawer.Screen name="Register" component={(props) => <Register {...props} auth={this.handleTokenUpdate}/>} options={{ headerShown: false }}/>
+            <Drawer.Screen name="2fa" component={(props) => <Tfa  {...props} auth={this.handleTokenUpdate} />} options={{ headerShown: false }} />
           </Drawer.Navigator>
         </NavigationContainer>
 

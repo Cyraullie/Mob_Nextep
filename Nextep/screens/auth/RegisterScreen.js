@@ -12,18 +12,16 @@ import {
 } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
-//import { showMessage } from "react-native-flash-message";
-//import { Picker } from "@react-native-picker/picker";
-
-//import PickerView from "../../components/Picker";
+import { showMessage } from "react-native-flash-message";
 
 export default class RegisterScreen extends Component {
     constructor(props) {
         super(props),
-        (this.state = { username: "", surname: "", lastname: "", firstname: "", password: "", cpassword: "", mdpConfirmed: false});
+        (this.state = { username: "", surname: "", lastname: "", firstname: "", password: "", cpassword: "", mdpConfirmed: false, tfa: false});
     }
 
     onUsernameChange = (email) => {
@@ -63,20 +61,42 @@ export default class RegisterScreen extends Component {
       }
     };
 
+    tfaChange = () => {
+      this.setState({ tfa: !this.state.tfa });
+    };
+
     onPressLogin(){
       this.setState({ register: false });
       this.props.navigation.navigate("Login")
     }
 
     onPressRegister() {
-        let { name, password, password_confirmation, email, lastname, firstname } = this.state;
-        let payload = { name, password, password_confirmation, email, lastname, firstname };
+        let { name, password, password_confirmation, email, lastname, firstname, tfa } = this.state;
+        let payload = { name, password, password_confirmation, email, lastname, firstname, tfa };
     
-        console.log(payload)
         const onSuccess = ({ data }) => {
           this.setState({ userToken: data });
-            SecureStore.setItemAsync("user_token", this.state.userToken);
-            this.props.auth(data);
+
+            const axiosConfig = {headers: { 
+              "Access-Control-Allow-Origin": "*", 
+              "Access-Control-Allow-Headers": "Content-Type",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+              Authorization: "Bearer " + this.state.userToken}
+            };
+
+            axios.get(BASE_URL +'2faEnabled', axiosConfig)
+            .then((data) => {
+              if(data.data){
+                SecureStore.setItemAsync("user_token_temp", this.state.userToken);
+                this.props.navigation.navigate("2fa")
+              }else {
+                SecureStore.setItemAsync("user_token", this.state.userToken);
+                this.props.auth(data);
+              }
+            })
+            .catch((error) => {
+              console.log(error && error.response);
+            })
         };
     
         const onFailure = (error) => {
@@ -142,6 +162,22 @@ export default class RegisterScreen extends Component {
                               onChangeText={this.onConfirmPasswordChange}
                           ></TextInput>
 
+                          
+                          <View style={styles.checkboxContainer}>
+                            <BouncyCheckbox
+                              size={40}
+                              fillColor="black"
+                              unfillColor="#FFFFFF"
+                              text="Double authentification"
+                              iconStyle={{ borderRadius: 5 }}
+                              isChecked={this.state.tfa}
+                              innerIconStyle={{ borderWidth: 3, borderRadius: 5 }}
+                              textStyle={styles.text}
+                              onPress={this.tfaChange}
+                            />                            
+                          </View>
+                          
+
                           <View>
                               <TouchableHighlight
                               style={styles.submit}
@@ -188,7 +224,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 5,
     fontWeight: "bold",
-    color: "white"
+    color: "white",
+    textDecorationLine: "none",
   },
   input: {
     backgroundColor: "#FFFFFF",
@@ -229,5 +266,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: 100,
     width: 100,
-  }
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 });
