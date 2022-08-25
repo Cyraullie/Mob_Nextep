@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 import { IMG_URL, BASE_URL } from "@env"
 import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import APIKit from "./Api";
 
@@ -48,8 +49,8 @@ export default class DataProfileView extends Component {
   }
  
   onPressUpdate = () => {
-    let { _method, username, email, firstname, lastname, wallet_address, description } = this.state;
-    let payload = { _method, username, email, firstname, lastname, wallet_address, description };
+    let { _method, username, email, firstname, lastname, wallet_address, description, tfa } = this.state;
+    let payload = { _method, username, email, firstname, lastname, wallet_address, description, tfa };
 
     const axiosConfig = {headers: { 
       "Access-Control-Allow-Origin": "*", 
@@ -102,9 +103,12 @@ export default class DataProfileView extends Component {
     this.setState({ wallet_address: wallet_address });
   };  
 
+  tfaChange = () => {
+    this.setState({ tfa: !this.state.tfa });
+  };
 
   getProfileData(data){
-    this.setState({ username: data.username, description: data.description, email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: "", description: data.description})
+    this.setState({ username: data.username, description: data.description, email: data.email, firstname: data.firstname, lastname: data.lastname, wallet_address: "", description: data.description, tfa: data.two_factor_auth})
     SecureStore.getItemAsync("qr_scan").then(
       async (address) => {
         if(address !== null){
@@ -171,6 +175,20 @@ export default class DataProfileView extends Component {
 
                 <Text>Email</Text>
                 <TextInput editable={false} defaultValue={data.email} style={styles.input} />
+
+                <View style={styles.checkboxContainer}>
+                  <BouncyCheckbox
+                    size={40}
+                    fillColor="black"
+                    unfillColor="#FFFFFF"
+                    text="Double authentification"
+                    iconStyle={{ borderRadius: 5 }}
+                    isChecked={this.state.tfa}
+                    innerIconStyle={{ borderWidth: 3, borderRadius: 5 }}
+                    textStyle={styles.text}
+                    onPress={this.tfaChange}
+                  />                            
+                </View>
 
                 <TouchableHighlight 
                   style={styles.submitFull}
@@ -345,7 +363,21 @@ const styles = StyleSheet.create({
   },
   photo_icon: {
     width: "10%"
-  }
+  },
+  text: {
+    fontSize: 15,
+    marginBottom: 5,
+    fontWeight: "bold",
+    color: "white",
+    textDecorationLine: "none",
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 0,
+    marginTop: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 });
 
 
