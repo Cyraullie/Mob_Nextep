@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BSC_API_TOKEN, BSC_URL } from "@env"
+const cheerio = require("cheerio");
 
 let connectBscApi = axios.create({
   baseURL: BSC_URL,
@@ -16,21 +17,23 @@ class API {
       return connectBscApi.get("api?module=contract&action=getsourcecode&address="+ contractaddress +"&apikey="+BSC_API_TOKEN)
     }
 
-    getNextepPrice(){
+    async getNextepPrice(contractaddress){
+      let site = await axios({
+        method: "GET",
+        url: "https://coinmarketcap.com/currencies/nextep/"
+      })
+      let price = 0;
 
-      /*let ws = new WebSocket("wss://stream.binance.com:9443/ws/nextep@trade")
+      const $ = cheerio.load(site.data)
+      const elemSelector = ".priceValue"
+      $(elemSelector).each((parentIdx, parentElem) => {
+        $(parentElem).children().each((childIdx, childElem) => {
+          price = $(childElem).text()
+        })
+      })
+      
 
-      ws.onmessage = (event) => {
-        console.log(event.data)
-      }*/
-
-/*
-
-      var options = {muteHttpExceptions: true};
-      resBTCPrice = JSON.parse(fetch('https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT',options).getContentText()); 
-      return resBTCPrice.price;
-*/
-      return axios.get('https://api.coinmarketcap.com/v1/ticker/nextep/')
+      return price
     }
 }
 

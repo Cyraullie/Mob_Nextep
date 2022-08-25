@@ -4,61 +4,41 @@ import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
 import { TouchableHighlight } from "react-native-gesture-handler";
 import axios from "axios";
+import {DevSettings} from 'react-native';
 
 import APIKit from "./Api";
 
+let contract_address = "0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3"
 
-export default class NextepView extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = { nextepData: []}
-  }
+export default function NextepView(props) {
+  const [price, setPrice] = React.useState();
 
+  React.useEffect(() => {
+    const pricer = setInterval(() => {
+      //setTime(new Date().toLocaleString());
+      
+      APIKit.getNextepPrice(contract_address)
+      .then((response) => {
+        //TODO actuellement le prix est récupéré depuis le site coinmarketcap mais ça ne recharche pas la valeur du prix entre chaque refresh
+        setPrice(response)
+      })
+      .catch(error => {
+        console.log(error);
+      }); 
+    }, 1000);
+
+    return () => {
+      clearInterval(pricer);
+    };
+  });
+
+
+  return (
+    <>
+      <Text> {price} / Nextep</Text>
+    </>
+  );
   
-
-  getData = () => {
-   /* console.log("test")
-    APIKit.getNextepPrice()
-    .then((response) => {
-      console.log(response)*/
-      this.getNextepData() 
-    /*})
-    .catch(error => {
-      console.log(error);
-    }); */
-  }
-
-  
-  getNextepData(){
-    //console.log(data)
-    const nextepShift = []
-
-        nextepShift.push(
-            <>
-              <Text>Nextep</Text>
-            </>
-        )
-
-    Moment.locale("fr");
-    
-    this.setState({
-        nextepData: nextepShift,
-    })
-        
-  }
-  
-  componentDidMount() {
-    this.getData()
-  }
-
-  render() {
-    return (
-      <>
-        {this.state.nextepData}
-      </>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
