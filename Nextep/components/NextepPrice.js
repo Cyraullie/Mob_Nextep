@@ -32,42 +32,21 @@ export default function NextepView(props) {
     };
   });
 
-
   return (
     <>
-      <Text> {price} / Nextep</Text>
+      <Text style={styles.nextepPrice}> {price} / Nextep</Text>
     </>
   );
-  
 }
 
 const styles = StyleSheet.create({
-    tab: {
-        width: (Dimensions.get('window').width / 2) - 2,
+  nextepPrice: {
         marginLeft: "auto",
         marginRight: "auto",
-        marginTop: 15,
-        paddingTop: 15,
-        paddingBottom: 15,
-        backgroundColor: 'blue',
-    },
-    tabDisabled: {
-        width: (Dimensions.get('window').width / 2) - 2,
-        marginLeft: "auto",
-        marginRight: "auto",
-        marginTop: 15,
-        paddingTop: 15,
-        paddingBottom: 15,
-        backgroundColor: 'grey',
-    },
-    tabText: {
-        color: "#FFFFFF",
-        textAlign: "center",
-        fontSize: 15,
+        marginTop: "auto",
+        marginBottom: "auto",
+        fontSize: 25,
         fontWeight: "bold",
-    },  
+        color: "purple"
+  }
 });
-
-
-
-

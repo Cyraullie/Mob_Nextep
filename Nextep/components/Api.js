@@ -17,7 +17,7 @@ class API {
       return connectBscApi.get("api?module=contract&action=getsourcecode&address="+ contractaddress +"&apikey="+BSC_API_TOKEN)
     }
 
-    async getNextepPrice(contractaddress){
+    async getNextepPrice(){
       let site = await axios({
         method: "GET",
         url: "https://coinmarketcap.com/currencies/nextep/"
@@ -32,7 +32,6 @@ class API {
         })
       })
       
-
       return price
     }
 }

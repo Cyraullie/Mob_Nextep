@@ -17,8 +17,6 @@ class HomeScreen extends Component {
         return (
             <View style={styles.container}>
 
-                  <Text>Home</Text>
-
                   <NextepPrice />
 
                   <View style={styles.tabArea}>
