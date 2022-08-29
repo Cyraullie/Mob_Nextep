@@ -1,14 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, Dimensions } from "react-native";
-import Moment from "moment";
-import * as SecureStore from 'expo-secure-store';
-import { TouchableHighlight } from "react-native-gesture-handler";
-import axios from "axios";
-import {DevSettings} from 'react-native';
+import { StyleSheet, Text } from "react-native";
 
 import APIKit from "./Api";
-
-let contract_address = "0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3"
+import { NEXTEP_ADDRESS } from "@env"
 
 export default function NextepView(props) {
   const [price, setPrice] = React.useState();
@@ -17,9 +11,8 @@ export default function NextepView(props) {
     const pricer = setInterval(() => {
       //setTime(new Date().toLocaleString());
       
-      APIKit.getNextepPrice(contract_address)
+      APIKit.getNextepPrice(NEXTEP_ADDRESS)
       .then((response) => {
-        //TODO actuellement le prix est récupéré depuis le site coinmarketcap mais ça ne recharche pas la valeur du prix entre chaque refresh
         setPrice(response)
       })
       .catch(error => {

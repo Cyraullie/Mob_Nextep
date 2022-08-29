@@ -6,7 +6,6 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   ScrollView,
   SafeAreaView,
 } from "react-native";
@@ -15,7 +14,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
-import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
+import { BASE_URL } from "@env"
 import { showMessage } from "react-native-flash-message";
 
 export default class RegisterScreen extends Component {

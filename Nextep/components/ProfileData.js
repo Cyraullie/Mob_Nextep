@@ -4,13 +4,11 @@ import { Card } from "react-native-elements";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
-import { IMG_URL, BASE_URL } from "@env"
+import { IMG_URL, BASE_URL, NEXTEP_ADDRESS } from "@env"
 import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import APIKit from "./Api";
-
-let contract_address = "0xF10770649b0b8f62BB5E87ad0da7729888A7F5C3"
 
 export default class DataProfileView extends Component {
   constructor(props) {
@@ -122,7 +120,7 @@ export default class DataProfileView extends Component {
         const walletData = []
 
         for(let i = 0; i < walletArr.length; i++){
-          let quantitie = await APIKit.getTokenQuantity(contract_address, walletArr[i].address)
+          let quantitie = await APIKit.getTokenQuantity(NEXTEP_ADDRESS, walletArr[i].address)
           console.log(walletArr[i])
           console.log(BASE_URL + "profile/wallet/" + walletArr[i].id)
           walletData.push(

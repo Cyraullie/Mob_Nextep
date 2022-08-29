@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
   Text,
-  TextInput,
   View,
-  Button,
-  SafeAreaView,
 } from "react-native";
 
 
@@ -21,11 +16,9 @@ export default class ChatScreen extends Component {
         return (
             <View style={styles.container}>
 
-              <SafeAreaView>
                   
-                <Text>Chat</Text>
+              <Text>Chat</Text>
                   
-              </SafeAreaView>
             </View>
         );
     }

@@ -1,13 +1,7 @@
 import React, { Component } from "react";
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
-  Text,
-  TextInput,
   View,
-  Button,
-  SafeAreaView,
 } from "react-native";
 
 import DataProfileView from "../../components/ProfileData";
