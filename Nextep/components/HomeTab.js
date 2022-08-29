@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, Image, Dimensions, Alert } from "react-native";
-import { Card } from "react-native-elements";
+import { StyleSheet, Text, Dimensions } from "react-native";
 import Moment from "moment";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
-import { IMG_URL, BASE_URL } from "@env"
-import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
-import { ProgressBar } from "rn-multi-progress-bar";
+import { BASE_URL } from "@env"
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 
 export default class HomeTabView extends Component {
@@ -36,32 +34,41 @@ export default class HomeTabView extends Component {
     const topicArr = data
     const tabShift = []
 
-    //for(let i = 0; i < topicArr.length; i++){
-        tabShift.push(
-        <>
-            <TouchableHighlight style={styles.tab} disabled={false} onPress={() => {
-                this.props.nav.reset({
-                    index: 0,
-                    routes: [{ name: 'Chat' }],
-                })
-                }}>
-                <Text style={styles.tabText}>Chat</Text>
-            </TouchableHighlight>
-
-            
-                        
-            <TouchableHighlight style={topicArr.length < 1 ? styles.tabDisabled : styles.tab} disabled={topicArr.length < 1} onPress={() => {
+    tabShift.push(
+      <>
+        <TouchableHighlight style={styles.tab} disabled={false} onPress={() => {
             this.props.nav.reset({
                 index: 0,
-                routes: [{ name: 'Vote' }],
+                routes: [{ name: 'Chat' }],
             })
             }}>
-                <Text style={styles.tabText}>{topicArr.length < 1 ? "Vote" : "Vote !"}</Text>
-            </TouchableHighlight>        
+            <Text style={styles.tabText}>Chat</Text>
+        </TouchableHighlight>
 
-        </>
         
-      )
+                    
+        <TouchableHighlight style={topicArr.length < 1 ? styles.tabDisabled : styles.tab} disabled={topicArr.length < 1} onPress={() => {
+        this.props.nav.reset({
+            index: 0,
+            routes: [{ name: 'Vote' }],
+        })
+        }}>
+            <Text style={styles.tabText}>{topicArr.length < 1 ? "Vote" : "Vote !"}</Text>
+        </TouchableHighlight>        
+
+
+
+        <TouchableHighlight style={topicArr.length < 1 ? styles.tabDisabled : styles.tab} disabled={topicArr.length < 1} onPress={() => {
+        this.props.nav.reset({
+            index: 0,
+            routes: [{ name: 'Cagnotte' }],
+        })
+        }}>
+            <Text style={styles.tabText}>{topicArr.length < 1 ? "Cagnotte" : "Cagnotte !"}</Text>
+        </TouchableHighlight>     
+      </>
+    
+    )
     
 
     Moment.locale("fr");
@@ -87,7 +94,7 @@ export default class HomeTabView extends Component {
 
 const styles = StyleSheet.create({
     tab: {
-        width: (Dimensions.get('window').width / 2) - 2,
+        width: (Dimensions.get('window').width / 3) - 2,
         marginLeft: "auto",
         marginRight: "auto",
         marginTop: 15,
@@ -96,7 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
     },
     tabDisabled: {
-        width: (Dimensions.get('window').width / 2) - 2,
+        width: (Dimensions.get('window').width / 3) - 2,
         marginLeft: "auto",
         marginRight: "auto",
         marginTop: 15,

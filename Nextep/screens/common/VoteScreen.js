@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
   Text,
-  TextInput,
   View,
   ScrollView,
-  Button,
-  SafeAreaView,
 } from "react-native";
 
 import DataVotingView from "../../components/VoteData";

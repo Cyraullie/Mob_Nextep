@@ -13,7 +13,7 @@ import { showMessage } from "react-native-flash-message";
 
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
-import { IMG_URL, BASE_URL, BSC_API_TOKEN, BSC_URL } from "@env"
+import { BASE_URL } from "@env"
 
 export default class TfaScreen extends Component {
     constructor(props) {
