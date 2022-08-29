@@ -56,6 +56,16 @@ export default class HomeTabView extends Component {
             <Text style={styles.tabText}>{topicArr.length < 1 ? "Vote" : "Vote !"}</Text>
         </TouchableHighlight>        
 
+
+
+        <TouchableHighlight style={topicArr.length < 1 ? styles.tabDisabled : styles.tab} disabled={topicArr.length < 1} onPress={() => {
+        this.props.nav.reset({
+            index: 0,
+            routes: [{ name: 'Cagnotte' }],
+        })
+        }}>
+            <Text style={styles.tabText}>{topicArr.length < 1 ? "Cagnotte" : "Cagnotte !"}</Text>
+        </TouchableHighlight>     
       </>
     
     )
@@ -84,7 +94,7 @@ export default class HomeTabView extends Component {
 
 const styles = StyleSheet.create({
     tab: {
-        width: (Dimensions.get('window').width / 2) - 2,
+        width: (Dimensions.get('window').width / 3) - 2,
         marginLeft: "auto",
         marginRight: "auto",
         marginTop: 15,
@@ -93,7 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
     },
     tabDisabled: {
-        width: (Dimensions.get('window').width / 2) - 2,
+        width: (Dimensions.get('window').width / 3) - 2,
         marginLeft: "auto",
         marginRight: "auto",
         marginTop: 15,
