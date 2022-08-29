@@ -4,7 +4,10 @@ import {
   Text,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
+import PotPrice from "../../components/PotPrice";
+import DataPotView from "../../components/PotData";
 
 export default class PotScreen extends Component {
     constructor(props) {
@@ -16,9 +19,16 @@ export default class PotScreen extends Component {
         return (
             <View style={styles.container}>
 
-                  
+              <PotPrice />
+                
+              <ScrollView>
                 <Text>Pot</Text>
-             
+
+                <DataPotView nav={this.props.navigation}/>
+
+
+
+              </ScrollView>
             </View>
         );
     }

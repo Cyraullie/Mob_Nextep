@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import { StyleSheet, Text } from "react-native";
 
 import APIKit from "./Api";
-import { NEXTEP_ADDRESS } from "@env"
+import { POT_ADDRESS } from "@env"
 
 export default function NextepView(props) {
   const [price, setPrice] = React.useState();
 
   React.useEffect(() => {
-    const pricer = setInterval(() => {      
-      APIKit.getNextepPrice(NEXTEP_ADDRESS)
+    const pricer = setInterval(() => {
+      
+      APIKit.getPotPrice(POT_ADDRESS)
       .then((response) => {
         setPrice(response)
       })
@@ -25,16 +26,16 @@ export default function NextepView(props) {
 
   return (
     <>
-      <Text style={styles.nextepPrice}> {price} / Nextep</Text>
+      <Text style={styles.potPrice}> {price} / Nextep</Text>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  nextepPrice: {
+  potPrice: {
         marginLeft: "auto",
         marginRight: "auto",
-        marginTop: "auto",
+        marginTop: 10,
         marginBottom: "auto",
         fontSize: 25,
         fontWeight: "bold",

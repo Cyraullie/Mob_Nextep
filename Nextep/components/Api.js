@@ -34,6 +34,27 @@ class API {
       
       return price
     }
+
+    async getPotPrice(){
+      let site = await axios({
+        method: "GET",
+        url: "https://coinmarketcap.com/currencies/nextep/"
+      })
+      let price = 0;
+
+      const $ = cheerio.load(site.data)
+      const elemSelector = ".priceValue"
+      $(elemSelector).each((parentIdx, parentElem) => {
+        $(parentElem).children().each((childIdx, childElem) => {
+          price = $(childElem).text()
+        })
+      })
+      
+      return price
+    }
+    
+
+
 }
 
 
